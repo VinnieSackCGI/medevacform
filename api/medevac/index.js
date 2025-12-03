@@ -99,12 +99,29 @@ async function handleCreate(context, req, containerClient) {
         const id = generateMedevacId();
         const timestamp = new Date().toISOString();
         
+        // Get user info from Static Web Apps auth
+        const userHeader = req.headers['x-ms-client-principal'];
+        let userInfo = null;
+        if (userHeader) {
+            try {
+                const decoded = Buffer.from(userHeader, 'base64').toString('ascii');
+                userInfo = JSON.parse(decoded);
+            } catch (e) {
+                context.log('Could not parse user info:', e);
+            }
+        }
+
         const submission = {
             id: id,
             ...formData,
             createdAt: timestamp,
             updatedAt: timestamp,
-            status: formData.status || 'draft'
+            status: formData.status || 'draft',
+            createdBy: userInfo ? {
+                userId: userInfo.userId,
+                userDetails: userInfo.userDetails,
+                identityProvider: userInfo.identityProvider
+            } : null
         };
 
         const blobName = `medevac-submissions/${id}.json`;

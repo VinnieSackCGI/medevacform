@@ -483,6 +483,15 @@ Response: HTML dashboard with real-time monitoring
 - **Error Isolation**: Graceful degradation prevents data exposure
 - **No Logging of Sensitive Data**: System logs exclude personal/medical information
 
+### User Authentication & Access Control
+- **Azure AD Integration**: Enterprise-grade authentication with Microsoft identity platform
+- **Multi-Provider Support**: Azure AD, GitHub, and Google authentication options
+- **Role-Based Access Control**: Configurable user roles and permissions
+- **Session Management**: Secure JWT token handling and automatic session refresh
+- **Protected Routes**: Comprehensive route protection with authentication checks
+
+📋 **For complete authentication system details, see [AUTHENTICATION_SYSTEM.md](./AUTHENTICATION_SYSTEM.md)**
+
 ### State Department Compliance
 - **Official Rate Sources**: Direct integration with allowances.state.gov
 - **DSSR 925 Compliance**: Follows Standardized Regulations for per diem calculations

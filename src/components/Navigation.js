@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import ThemeToggle from './ui/ThemeToggle';
 import { 
   HomeIcon, 
@@ -12,13 +13,16 @@ import {
   Bars3Icon,
   XMarkIcon,
   ShieldCheckIcon,
-  ChartPieIcon
+  ChartPieIcon,
+  UserIcon,
+  ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 import MedFlagLogo from "../assets/images/logos/med-flag-logo-horizontal-white.svg";
 
 export default function Navigation() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
 
   const navItems = [
     { path: '/', label: 'Home', icon: HomeIcon },
@@ -111,6 +115,29 @@ export default function Navigation() {
                 );
               })}
             </nav>
+
+            {/* Desktop User Menu & Theme Toggle */}
+            <div className="hidden md:flex items-center space-x-4">
+              <ThemeToggle variant="ghost" size="sm" />
+              
+              {isAuthenticated && user && (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2 px-3 py-2 bg-theme-bg-secondary rounded-lg">
+                    <UserIcon className="w-4 h-4 text-theme-text-secondary" />
+                    <span className="text-sm text-theme-text-primary font-medium">
+                      {user.name || user.email || 'User'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="flex items-center space-x-2 px-3 py-2 text-sm text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-bg-secondary rounded-lg transition-colors"
+                  >
+                    <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Mobile menu button & theme toggle */}
             <div className="md:hidden w-full flex justify-between items-center">
