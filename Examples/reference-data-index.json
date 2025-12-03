@@ -1,0 +1,28 @@
+﻿{
+  "referenceDataIndex": {
+    "lastUpdated": "2025-12-03 14:19:03",
+    "datasets": [
+      {
+        "name": "country-locations",
+        "description": "Complete list of countries and locations with per diem rates",
+        "file": "reference-data/country-locations.json",
+        "recordCount": 1081,
+        "fields": [
+          "Country",
+          "Location", 
+          "Location Code",
+          "Season Code",
+          "Season Start Date",
+          "Season End Date",
+          "Lodging",
+          "Meals & Incidentals", 
+          "Per Diem",
+          "Effective Date",
+          "Footnote Reference"
+        ],
+        "source": "Country Location and Post data.xlsx",
+        "uploadDate": "2025-12-03"
+      }
+    ]
+  }
+}

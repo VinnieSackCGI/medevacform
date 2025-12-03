@@ -1,0 +1,407 @@
+STATE DEPARTMENT REACT APPLICATION TEMPLATE GENERATOR
+========================================================
+
+This document provides instructions to create a basic React application following State Department branding and design standards.
+
+## INITIAL SETUP COMMANDS
+
+1. Create new React application:
+   npx create-react-app state-dept-app
+   cd state-dept-app
+
+2. Install additional dependencies:
+   npm install @tailwindcss/forms @headlessui/react @heroicons/react
+   npm install -D tailwindcss postcss autoprefixer
+
+3. Initialize Tailwind CSS:
+   npx tailwindcss init -p
+
+## PROJECT STRUCTURE
+
+state-dept-app/
+├── public/
+│   ├── index.html
+│   ├── manifest.json
+│   └── favicon.ico
+├── src/
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.jsx
+│   │   │   ├── Card.jsx
+│   │   │   ├── Input.jsx
+│   │   │   └── Navigation.jsx
+│   │   └── layout/
+│   │       ├── Header.jsx
+│   │       ├── Footer.jsx
+│   │       └── Layout.jsx
+│   ├── pages/
+│   │   ├── Home.jsx
+│   │   └── About.jsx
+│   ├── assets/
+│   │   └── images/
+│   ├── styles/
+│   │   ├── index.css
+│   │   └── components.css
+│   ├── App.js
+│   └── index.js
+└── package.json
+
+## STATE DEPARTMENT COLOR PALETTE
+
+Primary Colors:
+- Navy Blue: #003366 (Primary brand color)
+- Deep Blue: #004080 (Secondary)
+- Light Blue: #0066CC (Accent)
+- White: #FFFFFF (Background)
+- Light Gray: #F8F9FA (Secondary background)
+
+Secondary Colors:
+- Dark Gray: #495057 (Text primary)
+- Medium Gray: #6C757D (Text secondary)
+- Success Green: #28A745
+- Warning Gold: #FFC107
+- Error Red: #DC3545
+
+## TAILWIND CONFIG (tailwind.config.js)
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        'state-dept': {
+          'navy': '#003366',
+          'deep-blue': '#004080',
+          'light-blue': '#0066CC',
+          'gray-dark': '#495057',
+          'gray-medium': '#6C757D',
+          'gray-light': '#F8F9FA',
+        }
+      },
+      fontFamily: {
+        'official': ['Georgia', 'Times New Roman', 'serif'],
+        'modern': ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
+      }
+    },
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
+}
+
+## BASE CSS STYLES (src/styles/index.css)
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #495057;
+    background-color: #FFFFFF;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #003366;
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  .btn-state-primary {
+    @apply bg-state-dept-navy text-white px-6 py-2 rounded-md hover:bg-state-dept-deep-blue transition-colors font-medium;
+  }
+  
+  .btn-state-secondary {
+    @apply bg-white text-state-dept-navy border-2 border-state-dept-navy px-6 py-2 rounded-md hover:bg-state-dept-gray-light transition-colors font-medium;
+  }
+  
+  .card-state {
+    @apply bg-white rounded-lg shadow-md border border-gray-200 p-6;
+  }
+  
+  .input-state {
+    @apply border-gray-300 rounded-md focus:ring-state-dept-light-blue focus:border-state-dept-light-blue;
+  }
+}
+
+## MAIN APP COMPONENT (src/App.js)
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import Home from './pages/Home';
+import About from './pages/About';
+import './styles/index.css';
+
+function App() {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </Layout>
+    </Router>
+  );
+}
+
+export default App;
+
+## LAYOUT COMPONENT (src/components/layout/Layout.jsx)
+
+import React from 'react';
+import Header from './Header';
+import Footer from './Footer';
+
+const Layout = ({ children }) => {
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Layout;
+
+## HEADER COMPONENT (src/components/layout/Header.jsx)
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Header = () => {
+  return (
+    <header className="bg-state-dept-navy text-white shadow-lg">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center py-4">
+          <div className="flex items-center space-x-4">
+            <div className="text-xl font-bold">
+              U.S. Department of State
+            </div>
+          </div>
+          <nav className="hidden md:flex space-x-8">
+            <Link to="/" className="hover:text-gray-200 transition-colors">
+              Home
+            </Link>
+            <Link to="/about" className="hover:text-gray-200 transition-colors">
+              About
+            </Link>
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+## FOOTER COMPONENT (src/components/layout/Footer.jsx)
+
+import React from 'react';
+
+const Footer = () => {
+  return (
+    <footer className="bg-state-dept-gray-dark text-white py-6">
+      <div className="container mx-auto px-4">
+        <div className="text-center">
+          <p className="text-sm">
+            © {new Date().getFullYear()} U.S. Department of State
+          </p>
+          <p className="text-xs mt-2 text-gray-300">
+            Official U.S. Government Application
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+
+## HOME PAGE (src/pages/Home.jsx)
+
+import React from 'react';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+
+const Home = () => {
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-state-dept-navy mb-4">
+          Welcome to State Department Application
+        </h1>
+        <p className="text-xl text-state-dept-gray-medium">
+          A modern, accessible platform for government services
+        </p>
+      </div>
+      
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card title="Feature One" description="Description of primary feature">
+          <Button variant="primary">Get Started</Button>
+        </Card>
+        
+        <Card title="Feature Two" description="Description of secondary feature">
+          <Button variant="secondary">Learn More</Button>
+        </Card>
+        
+        <Card title="Feature Three" description="Description of tertiary feature">
+          <Button variant="primary">Explore</Button>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default Home;
+
+## UI COMPONENTS
+
+### Button Component (src/components/ui/Button.jsx)
+
+import React from 'react';
+
+const Button = ({ 
+  children, 
+  variant = 'primary', 
+  size = 'md', 
+  onClick, 
+  disabled = false,
+  className = '',
+  ...props 
+}) => {
+  const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
+  
+  const variants = {
+    primary: 'btn-state-primary focus:ring-state-dept-light-blue',
+    secondary: 'btn-state-secondary focus:ring-state-dept-light-blue',
+  };
+  
+  const sizes = {
+    sm: 'px-3 py-1 text-sm rounded',
+    md: 'px-6 py-2 text-base rounded-md',
+    lg: 'px-8 py-3 text-lg rounded-lg',
+  };
+
+  return (
+    <button
+      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
+export default Button;
+
+### Card Component (src/components/ui/Card.jsx)
+
+import React from 'react';
+
+const Card = ({ title, description, children, className = '' }) => {
+  return (
+    <div className={`card-state ${className}`}>
+      {title && (
+        <h3 className="text-lg font-semibold text-state-dept-navy mb-2">
+          {title}
+        </h3>
+      )}
+      {description && (
+        <p className="text-state-dept-gray-medium mb-4">
+          {description}
+        </p>
+      )}
+      {children}
+    </div>
+  );
+};
+
+export default Card;
+
+### Input Component (src/components/ui/Input.jsx)
+
+import React from 'react';
+
+const Input = ({ 
+  label, 
+  error, 
+  className = '', 
+  required = false,
+  ...props 
+}) => {
+  return (
+    <div className="mb-4">
+      {label && (
+        <label className="block text-sm font-medium text-state-dept-gray-dark mb-2">
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+      )}
+      <input
+        className={`input-state w-full ${error ? 'border-red-500' : ''} ${className}`}
+        {...props}
+      />
+      {error && (
+        <p className="mt-1 text-sm text-red-600">{error}</p>
+      )}
+    </div>
+  );
+};
+
+export default Input;
+
+## PACKAGE.JSON SCRIPTS
+
+Add these scripts to your package.json:
+
+"scripts": {
+  "start": "react-scripts start",
+  "build": "react-scripts build",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject",
+  "build:prod": "npm run build && echo 'Production build complete'"
+}
+
+## DEPLOYMENT CONSIDERATIONS
+
+1. Environment Variables:
+   - REACT_APP_API_URL
+   - REACT_APP_ENVIRONMENT
+
+2. Security Headers:
+   - Implement CSP headers
+   - Set appropriate CORS policies
+   - Use HTTPS in production
+
+3. Accessibility:
+   - Ensure WCAG 2.1 AA compliance
+   - Test with screen readers
+   - Implement proper ARIA labels
+
+4. Performance:
+   - Implement code splitting
+   - Optimize images
+   - Use React.lazy for route-based splitting
+
+## GETTING STARTED
+
+1. Run the commands in the "INITIAL SETUP COMMANDS" section
+2. Create the file structure outlined above
+3. Copy the component code into respective files
+4. Run `npm start` to begin development
+5. Customize components and pages for your specific application needs
+
+This template provides a solid foundation for any State Department React application with consistent branding, modern development practices, and accessibility considerations built in.

@@ -1,0 +1,223 @@
+/* Theme CSS Custom Properties */
+:root {
+  /* Light theme colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-accent: #e2e8f0;
+  
+  --text-primary: #0a2240; /* Black Pearl */
+  --text-secondary: #0a314d; /* Tarawera */
+  --text-tertiary: #6b7280;
+  --text-inverse: #ffffff;
+  
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+  --border-accent: #9ca3af;
+
+  /* Shadcn/ui integration - Light theme */
+  --background: 0 0% 100%;
+  --foreground: 222 84% 15%; /* Black Pearl HSL */
+  --card: 0 0% 100%;
+  --card-foreground: 222 84% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 84% 15%;
+  --primary: 212 67% 35%; /* Matisse HSL */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 222 84% 15%; /* Black Pearl HSL */
+  --secondary-foreground: 210 40% 98%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 45 93% 47%; /* Gold accent HSL */
+  --accent-foreground: 222 84% 15%;
+  --destructive: 0 83% 44%; /* Alizarin Crimson HSL */
+  --destructive-foreground: 210 40% 98%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 212 67% 35%; /* Matisse for focus ring */
+  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* Exact brand colors */
+  --black-pearl: #0a2240;
+  --tarawera: #0a314d;
+  --merlot: #981b1e;
+  --alizarin-crimson: #d01319;
+  --smalt: #002d74;
+  --matisse: #205493;
+  --gold-accent: #fbbf24;
+  
+  /* Status colors using brand colors */
+  --success: #10b981;
+  --warning: #fbbf24; /* Gold accent */
+  --error: var(--alizarin-crimson); /* Exact Alizarin Crimson */
+  --info: var(--matisse); /* Exact Matisse */
+
+  /* Status indicator colors for badges */
+  --status-success-light: 142 69% 58%;
+  --status-success-dark: 142 76% 36%;
+  --status-warning-light: 45 93% 47%;
+  --status-warning-dark: 45 93% 47%;
+  --status-error-light: 0 83% 44%;
+  --status-error-dark: 0 83% 44%;
+  --status-info-light: 212 67% 35%;
+  --status-info-dark: 212 67% 35%;
+  
+  /* Form specific */
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-border-focus: var(--matisse);
+  --input-text: var(--black-pearl);
+  --input-placeholder: #9ca3af;
+
+  /* Gradient backgrounds using exact brand colors */
+  --gradient-1: linear-gradient(135deg, var(--matisse) 0%, var(--smalt) 50%, var(--black-pearl) 100%);
+  --gradient-2: linear-gradient(135deg, var(--smalt) 0%, var(--matisse) 50%, var(--tarawera) 100%);
+  --gradient-3: linear-gradient(135deg, var(--black-pearl) 0%, var(--tarawera) 50%, var(--matisse) 100%);
+}
+
+/* Dark theme colors */
+[data-theme="dark"] {
+  --bg-primary: var(--black-pearl);
+  --bg-secondary: var(--tarawera);
+  --bg-tertiary: #334155;
+  --bg-accent: #475569;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-tertiary: #cbd5e1;
+  --text-inverse: var(--black-pearl);
+
+  /* Shadcn/ui integration - Dark theme */
+  --background: 222 84% 15%; /* Black Pearl HSL */
+  --foreground: 210 40% 98%;
+  --card: 219 51% 17%; /* Tarawera HSL */
+  --card-foreground: 210 40% 98%;
+  --popover: 219 51% 17%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 212 67% 35%; /* Matisse HSL */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 219 51% 17%; /* Tarawera HSL */
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 32% 17%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 45 93% 47%; /* Gold accent HSL */
+  --accent-foreground: 222 84% 15%;
+  --destructive: 0 83% 44%; /* Alizarin Crimson HSL */
+  --destructive-foreground: 210 40% 98%;
+  --border: 217 32% 17%;
+  --input: 217 32% 17%;
+  --ring: 212 67% 35%; /* Matisse for focus ring */
+  
+  --border-primary: #334155;
+  --border-secondary: #475569;
+  --border-accent: #64748b;
+  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+  
+  /* Brand colors remain consistent in dark mode */
+  --black-pearl: #0a2240;
+  --tarawera: #0a314d;
+  --merlot: #981b1e;
+  --alizarin-crimson: #d01319;
+  --smalt: #002d74;
+  --matisse: #205493;
+  --gold-accent: #fbbf24;
+  
+  /* Status colors for dark mode using brand colors */
+  --success: #34d399;
+  --warning: var(--gold-accent);
+  --error: var(--alizarin-crimson);
+  --info: var(--matisse);
+
+  /* Status indicator colors remain the same for dark mode */
+  --status-success-light: 142 69% 58%;
+  --status-success-dark: 142 76% 36%;
+  --status-warning-light: 45 93% 47%;
+  --status-warning-dark: 45 93% 47%;
+  --status-error-light: 0 83% 44%;
+  --status-error-dark: 0 83% 44%;
+  --status-info-light: 212 67% 35%;
+  --status-info-dark: 212 67% 35%;
+  
+  /* Form specific */
+  --input-bg: var(--tarawera);
+  --input-border: #475569;
+  --input-border-focus: var(--matisse);
+  --input-text: #f8fafc;
+  --input-placeholder: #94a3b8;
+
+  /* Gradient backgrounds using exact brand colors - dark mode */
+  --gradient-1: linear-gradient(135deg, var(--matisse) 0%, var(--smalt) 50%, var(--black-pearl) 100%);
+  --gradient-2: linear-gradient(135deg, var(--smalt) 0%, var(--matisse) 50%, var(--tarawera) 100%);
+  --gradient-3: linear-gradient(135deg, var(--black-pearl) 0%, var(--tarawera) 50%, var(--matisse) 100%);
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: 
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border-primary: #000000;
+    --text-primary: #000000;
+  }
+  
+  [data-theme="dark"] {
+    --border-primary: #ffffff;
+    --text-primary: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Base theme classes */
+.theme-bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.theme-bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.theme-bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-border-primary {
+  border-color: var(--border-primary);
+}
+
+.theme-shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.theme-shadow-lg {
+  box-shadow: var(--shadow-lg);
+}

@@ -1,0 +1,210 @@
+{
+  "all_headers": [
+    {
+      "col_idx": 2,
+      "col_letter": "B",
+      "header": "#N/A"
+    },
+    {
+      "col_idx": 3,
+      "col_letter": "C",
+      "header": "Cable Status"
+    },
+    {
+      "col_idx": 4,
+      "col_letter": "D",
+      "header": "Obligation Number"
+    },
+    {
+      "col_idx": 5,
+      "col_letter": "E",
+      "header": "MSG, DOS, or Seabee"
+    },
+    {
+      "col_idx": 6,
+      "col_letter": "F",
+      "header": "Patient Name"
+    },
+    {
+      "col_idx": 7,
+      "col_letter": "G",
+      "header": "Total Obligation"
+    },
+    {
+      "col_idx": 8,
+      "col_letter": "H",
+      "header": "Start Date"
+    },
+    {
+      "col_idx": 9,
+      "col_letter": "I",
+      "header": "End Date"
+    },
+    {
+      "col_idx": 10,
+      "col_letter": "J",
+      "header": "MEDEVAC Type"
+    },
+    {
+      "col_idx": 11,
+      "col_letter": "K",
+      "header": "Traveler Type"
+    },
+    {
+      "col_idx": 12,
+      "col_letter": "L",
+      "header": "Employee Status or Name"
+    },
+    {
+      "col_idx": 13,
+      "col_letter": "M",
+      "header": "Region"
+    },
+    {
+      "col_idx": 14,
+      "col_letter": "N",
+      "header": "Home Post"
+    },
+    {
+      "col_idx": 15,
+      "col_letter": "O",
+      "header": "MEDEVAC Location"
+    },
+    {
+      "col_idx": 16,
+      "col_letter": "P",
+      "header": "Route (CONUS/OCONUS)"
+    },
+    {
+      "col_idx": 17,
+      "col_letter": "Q",
+      "header": "Number of Amendments"
+    },
+    {
+      "col_idx": 18,
+      "col_letter": "R",
+      "header": "Duration of Extensions"
+    }
+  ],
+  "calculated_fields": [
+    {
+      "col_idx": 2,
+      "col_letter": "B",
+      "header": "#N/A"
+    },
+    {
+      "col_idx": 3,
+      "col_letter": "C",
+      "header": "Cable Status"
+    },
+    {
+      "col_idx": 4,
+      "col_letter": "D",
+      "header": "Obligation Number"
+    },
+    {
+      "col_idx": 5,
+      "col_letter": "E",
+      "header": "MSG, DOS, or Seabee"
+    },
+    {
+      "col_idx": 7,
+      "col_letter": "G",
+      "header": "Total Obligation"
+    },
+    {
+      "col_idx": 8,
+      "col_letter": "H",
+      "header": "Start Date"
+    },
+    {
+      "col_idx": 9,
+      "col_letter": "I",
+      "header": "End Date"
+    },
+    {
+      "col_idx": 10,
+      "col_letter": "J",
+      "header": "MEDEVAC Type"
+    },
+    {
+      "col_idx": 11,
+      "col_letter": "K",
+      "header": "Traveler Type"
+    },
+    {
+      "col_idx": 12,
+      "col_letter": "L",
+      "header": "Employee Status or Name"
+    },
+    {
+      "col_idx": 13,
+      "col_letter": "M",
+      "header": "Region"
+    },
+    {
+      "col_idx": 14,
+      "col_letter": "N",
+      "header": "Home Post"
+    },
+    {
+      "col_idx": 15,
+      "col_letter": "O",
+      "header": "MEDEVAC Location"
+    },
+    {
+      "col_idx": 16,
+      "col_letter": "P",
+      "header": "Route (CONUS/OCONUS)"
+    },
+    {
+      "col_idx": 17,
+      "col_letter": "Q",
+      "header": "Number of Amendments"
+    }
+  ],
+  "input_fields": [
+    {
+      "col_idx": 6,
+      "col_letter": "F",
+      "header": "Patient Name"
+    },
+    {
+      "col_idx": 18,
+      "col_letter": "R",
+      "header": "Duration of Extensions"
+    }
+  ],
+  "reference_data_columns": [
+    {
+      "col_idx": 6,
+      "col_letter": "F",
+      "header": "CITY/POST"
+    },
+    {
+      "col_idx": 7,
+      "col_letter": "G",
+      "header": "COUNTRY "
+    },
+    {
+      "col_idx": 8,
+      "col_letter": "H",
+      "header": "BUREAU"
+    }
+  ],
+  "initial_columns": [],
+  "amendment_columns": [
+    {
+      "col_idx": 17,
+      "col_letter": "Q",
+      "header": "Number of Amendments"
+    }
+  ],
+  "extension_columns": [
+    {
+      "col_idx": 18,
+      "col_letter": "R",
+      "header": "Duration of Extensions"
+    }
+  ]
+}

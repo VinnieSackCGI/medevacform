@@ -3,20 +3,48 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "cheerio": "^1.1.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.553.0",
+    "mermaid": "^11.12.1",
+    "node-fetch": "^3.3.2",
+    "puppeteer": "^24.31.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-leaflet": "^5.0.0",
+    "react-router-dom": "^7.9.5",
     "react-scripts": "5.0.1",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "scraper": "node server/scraper.js",
+    "perdiem-api": "node server/perdiem-api.js",
+    "documentation-api": "node server/documentation-api.js",
+    "dev": "concurrently \"npm run perdiem-api\" \"npm run documentation-api\" \"npm start\"",
+    "perdiem:lookup": "cd server && node perdiem.js",
+    "perdiem:verify": "cd server && node final-verification.js",
+    "perdiem:test-all": "cd server && node test-all-pcodes.js",
+    "perdiem:interactive": "cd server && node interactive-lookup.js",
+    "lessons:review": "echo 'Key lessons: Edge cases matter, validation must reflect reality, universal patterns require flexibility' && type LESSONS-LEARNED.md"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +63,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@shadcn/ui": "^0.0.4",
+    "@types/node": "^24.10.0",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.6",
+    "shadcn-ui": "^0.9.5",
+    "tailwindcss": "^3.4.18"
   }
 }

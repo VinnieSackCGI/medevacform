@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python analyze_excel.py:*)",
+      "Bash(python detailed_analysis.py:*)",
+      "Bash(python full_structure_analysis.py:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
