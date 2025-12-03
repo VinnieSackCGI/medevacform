@@ -22,9 +22,9 @@ export default function Navigation() {
 
   const navItems = [
     { path: '/', label: 'Home', icon: HomeIcon },
-    { path: '/form', label: 'Entry Form', icon: DocumentTextIcon },
-    { path: '/dashboard', label: 'Dashboard', icon: ChartPieIcon },
-    { path: '/database', label: 'Database', icon: ChartBarIcon },
+    { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon },
+    { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon },
+    { path: '/dashboard', label: 'Analytics', icon: ChartBarIcon },
     { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon },
     { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon },
     { path: '/instructions', label: 'Instructions', icon: BookOpenIcon },

@@ -129,20 +129,74 @@ export const useMEDEVACForm = () => {
     setFormData(initialFormData);
   }, []);
 
-  const saveForm = useCallback(() => {
-    const medevacData = {
-      ...mergedFormData,
-      submittedAt: new Date().toISOString(),
-      id: Date.now()
-    };
-    
-    // Save to localStorage for now
-    const existingData = JSON.parse(localStorage.getItem('medevacSubmissions') || '[]');
-    existingData.push(medevacData);
-    localStorage.setItem('medevacSubmissions', JSON.stringify(existingData));
-    
-    return medevacData;
-  }, [mergedFormData]);
+  const saveForm = useCallback(async (isDraft = true) => {
+    try {
+      const MedevacService = (await import('../services/MedevacService')).default;
+      
+      const medevacData = {
+        ...mergedFormData,
+        status: isDraft ? 'draft' : 'submitted',
+        savedAt: new Date().toISOString()
+      };
+      
+      let result;
+      if (mergedFormData.id && mergedFormData.id !== Date.now()) {
+        // Update existing submission (if it has a server-generated ID)
+        result = await MedevacService.updateSubmission(mergedFormData.id, medevacData);
+      } else {
+        // Create new submission
+        result = await MedevacService.createSubmission(medevacData);
+        // Update form data with the new ID
+        updateFormData(prev => ({ ...prev, id: result.id }));
+      }
+      
+      // Also save to localStorage as backup
+      const existingData = JSON.parse(localStorage.getItem('medevacSubmissions') || '[]');
+      const existingIndex = existingData.findIndex(item => item.id === result.id);
+      if (existingIndex >= 0) {
+        existingData[existingIndex] = result.submission;
+      } else {
+        existingData.push(result.submission);
+      }
+      localStorage.setItem('medevacSubmissions', JSON.stringify(existingData));
+      
+      return result;
+    } catch (error) {
+      console.error('Error saving form:', error);
+      // Fallback to localStorage if API fails
+      const medevacData = {
+        ...mergedFormData,
+        submittedAt: new Date().toISOString(),
+        id: mergedFormData.id || Date.now()
+      };
+      
+      const existingData = JSON.parse(localStorage.getItem('medevacSubmissions') || '[]');
+      existingData.push(medevacData);
+      localStorage.setItem('medevacSubmissions', JSON.stringify(existingData));
+      
+      throw error;
+    }
+  }, [mergedFormData, updateFormData]);
+
+  const loadForm = useCallback(async (id) => {
+    try {
+      const MedevacService = (await import('../services/MedevacService')).default;
+      const submission = await MedevacService.getSubmission(id);
+      
+      // Load the form data
+      setFormData(submission);
+      updateFormData(submission);
+      
+      return submission;
+    } catch (error) {
+      console.error('Error loading form:', error);
+      throw error;
+    }
+  }, [setFormData, updateFormData]);
+
+  const submitForm = useCallback(async () => {
+    return await saveForm(false); // Submit as final, not draft
+  }, [saveForm]);
 
   const exportForm = useCallback(() => {
     const dataToExport = {
@@ -171,6 +225,8 @@ export const useMEDEVACForm = () => {
     setFormData: updateFormData,
     resetForm,
     saveForm,
+    loadForm,
+    submitForm,
     exportForm,
     calculatedValues
   };

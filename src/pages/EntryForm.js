@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import EnhancedMEDEVACForm from "../components/medevac/EnhancedMEDEVACForm";
 import { ChevronUp } from "lucide-react";
 
 const EntryForm = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -24,7 +26,7 @@ const EntryForm = () => {
 
   return (
     <div className="w-full relative">
-      <EnhancedMEDEVACForm />
+      <EnhancedMEDEVACForm submissionId={searchParams.get('id')} />
       
       {showScrollTop && (
         <button

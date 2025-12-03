@@ -12,6 +12,7 @@ import Instructions from './components/Instructions';
 import LandingPage from './pages/LandingPage';
 import DocumentationPage from './pages/DocumentationPage';
 import MedevacDashboard from './pages/MedevacDashboard';
+import MedevacManagement from './pages/MedevacManagement';
 
 function AppContent() {
   const location = useLocation();
@@ -25,6 +26,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/form" element={<EntryForm />} />
+          <Route path="/management" element={<MedevacManagement />} />
           <Route path="/database" element={<DatabaseView />} />
           <Route path="/post-data" element={<PostData />} />
           <Route path="/scraper" element={<ScraperForm />} />

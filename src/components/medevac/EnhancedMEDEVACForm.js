@@ -13,9 +13,29 @@ import CompletionSection from "./CompletionSection";
 import useMEDEVACForm from "../../hooks/useMEDEVACForm";
 import { getValidationStatus } from "../../utils/formValidation";
 
-const EnhancedMEDEVACForm = () => {
-  const { formData, updateForm, calculatedValues, saveForm, exportForm } = useMEDEVACForm();
+const EnhancedMEDEVACForm = ({ submissionId }) => {
+  const { formData, updateForm, calculatedValues, saveForm, loadForm, submitForm, exportForm } = useMEDEVACForm();
   const [currentSection, setCurrentSection] = useState('basic');
+  const [saving, setSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Load existing submission if ID provided
+  useEffect(() => {
+    if (submissionId) {
+      const loadExistingSubmission = async () => {
+        setLoading(true);
+        try {
+          await loadForm(submissionId);
+        } catch (error) {
+          alert('Failed to load MEDEVAC submission: ' + error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadExistingSubmission();
+    }
+  }, [submissionId, loadForm]);
 
   // Memoize validation status to prevent unnecessary recalculations
   const validationStatus = useMemo(() => 
@@ -23,11 +43,29 @@ const EnhancedMEDEVACForm = () => {
     [formData]
   );
 
-  const handleSave = useCallback(() => {
-    const savedData = saveForm();
-    alert('Enhanced MEDEVAC request saved successfully!');
-    return savedData;
+  const handleSaveDraft = useCallback(async () => {
+    setSaving(true);
+    try {
+      const result = await saveForm(true); // Save as draft
+      alert(`MEDEVAC request saved as draft! ID: ${result.id || result.submission?.id}`);
+    } catch (error) {
+      alert('Error saving draft: ' + error.message);
+    } finally {
+      setSaving(false);
+    }
   }, [saveForm]);
+
+  const handleSubmit = useCallback(async () => {
+    setSubmitting(true);
+    try {
+      const result = await submitForm(); // Submit for review
+      alert(`MEDEVAC request submitted successfully! ID: ${result.id || result.submission?.id}`);
+    } catch (error) {
+      alert('Error submitting request: ' + error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  }, [submitForm]);
 
   const handleExport = useCallback(() => {
     exportForm();
@@ -295,11 +333,21 @@ const EnhancedMEDEVACForm = () => {
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
-              onClick={handleSave}
-              className="bg-matisse hover:bg-smalt text-white flex-1 py-3"
+              onClick={handleSaveDraft}
+              disabled={saving}
+              className="bg-gray-600 hover:bg-gray-700 text-white flex-1 py-3"
             >
               <Save className="h-5 w-5 mr-2" />
-              Save Enhanced MEDEVAC Request
+              {saving ? 'Saving...' : 'Save as Draft'}
+            </Button>
+            
+            <Button
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="bg-matisse hover:bg-smalt text-white flex-1 py-3"
+            >
+              <CheckCircle className="h-5 w-5 mr-2" />
+              {submitting ? 'Submitting...' : 'Submit MEDEVAC Request'}
             </Button>
             
             <Button
@@ -308,7 +356,7 @@ const EnhancedMEDEVACForm = () => {
               className="border-gold-accent text-black-pearl hover:bg-gold-accent hover:text-white flex-1 py-3"
             >
               <Download className="h-5 w-5 mr-2" />
-              Export Enhanced Data
+              Export Data
             </Button>
           </div>
 
