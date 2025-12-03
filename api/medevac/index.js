@@ -15,17 +15,20 @@ module.exports = async function (context, req) {
 
     try {
         const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+        context.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('STORAGE')));
         
         if (!connectionString) {
-            context.res = {
-                status: 500,
-                headers: getCorsHeaders(),
-                body: { error: "Storage connection string not configured" }
-            };
-            return;
-        }
-
-        const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+        context.log.error('Storage connection string not found in environment variables');
+        context.res = {
+          status: 500,
+          headers: getCorsHeaders(),
+          body: { 
+            error: "Storage connection string not configured",
+            debug: "Environment check failed"
+          }
+        };
+        return;
+      }        const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
         const containerClient = blobServiceClient.getContainerClient('application-data');
 
         switch (method) {
