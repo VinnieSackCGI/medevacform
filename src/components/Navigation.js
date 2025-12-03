@@ -22,18 +22,36 @@ import MedFlagLogo from "../assets/images/logos/med-flag-logo-horizontal-white.s
 export default function Navigation() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth();
 
-  const navItems = [
-    { path: '/', label: 'Home', icon: HomeIcon },
-    { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon },
-    { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon },
-    { path: '/dashboard', label: 'Analytics', icon: ChartBarIcon },
-    { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon },
-    { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon },
-    { path: '/instructions', label: 'Instructions', icon: BookOpenIcon },
-    { path: '/documentation', label: 'Documentation', icon: FolderIcon }
-  ];
+  const { user, logout, isAuthenticated, hasRole } = useAuth();
+
+  // Build navigation items based on user role
+  const getNavItems = () => {
+    const baseItems = [
+      { path: '/', label: 'Home', icon: HomeIcon },
+      { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon },
+      { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon },
+      { path: '/dashboard', label: 'Analytics', icon: ChartBarIcon },
+      { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon },
+      { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon },
+      { path: '/instructions', label: 'Instructions', icon: BookOpenIcon },
+      { path: '/documentation', label: 'Documentation', icon: FolderIcon }
+    ];
+
+    // Add admin menu for admin users
+    if (hasRole && hasRole('admin')) {
+      baseItems.push({ 
+        path: '/admin/access-requests', 
+        label: 'Access Requests', 
+        icon: ShieldCheckIcon,
+        adminOnly: true
+      });
+    }
+
+    return baseItems;
+  };
+
+  const navItems = getNavItems();
 
   return (
     <>

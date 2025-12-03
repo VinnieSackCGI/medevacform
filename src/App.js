@@ -16,6 +16,7 @@ import LandingPage from './pages/LandingPage';
 import DocumentationPage from './pages/DocumentationPage';
 import MedevacDashboard from './pages/MedevacDashboard';
 import MedevacManagement from './pages/MedevacManagement';
+import AdminAccessRequests from './components/AdminAccessRequests';
 
 function AppContent() {
   const location = useLocation();
@@ -71,6 +72,11 @@ function AppContent() {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <MedevacDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/access-requests" element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminAccessRequests />
             </ProtectedRoute>
           } />
         </Routes>
