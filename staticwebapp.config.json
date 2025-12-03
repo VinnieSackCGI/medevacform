@@ -5,24 +5,8 @@
   },
   "routes": [
     {
-      "route": "/login",
-      "redirect": "/.auth/login/aad"
-    },
-    {
-      "route": "/logout",
-      "redirect": "/.auth/logout"
-    },
-    {
-      "route": "/api/access-requests",
-      "allowedRoles": ["authenticated"]
-    },
-    {
       "route": "/api/*",
       "allowedRoles": ["authenticated"]
-    },
-    {
-      "route": "/admin/*",
-      "allowedRoles": ["admin"]
     },
     {
       "route": "/*",
