@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from "react";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
+import { Button } from "./button";
+import { Badge } from "./badge";
 import { ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, Clock, Bookmark } from "lucide-react";
 
 // Enhanced Section Navigation with better UX
