@@ -1,0 +1,15 @@
+{
+  "name": "medevac-api",
+  "version": "1.0.0",
+  "description": "MEDEVAC API functions for Azure Static Web Apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.17.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
