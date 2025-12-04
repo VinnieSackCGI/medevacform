@@ -5,7 +5,6 @@ import './styles/themes.css';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import Navigation from './components/Navigation';
-import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './components/LoginPage';
 import EntryForm from './pages/EntryForm';
 import DatabaseView from './pages/DatabaseView';
