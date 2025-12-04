@@ -17,6 +17,8 @@ import LandingPage from './pages/LandingPage';
 import DocumentationPage from './pages/DocumentationPage';
 import MedevacDashboard from './pages/MedevacDashboard';
 import MedevacManagement from './pages/MedevacManagement';
+import AccessRequestForm from './components/AccessRequestForm';
+import AccessRequestAdmin from './components/AccessRequestAdmin';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -69,6 +71,7 @@ function AppContent() {
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/request-account" element={<RequestAccountPage />} />
+          <Route path="/request-access" element={<AccessRequestForm />} />
           {!isAuthenticated && <Route path="/" element={<LandingPage />} />}
           
           {/* Protected routes */}
@@ -115,6 +118,11 @@ function AppContent() {
           <Route path="/documentation" element={
             <ProtectedRoute>
               <DocumentationPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/requests" element={
+            <ProtectedRoute>
+              <AccessRequestAdmin />
             </ProtectedRoute>
           } />
           
