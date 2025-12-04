@@ -28,51 +28,15 @@ function AppContent() {
       <main className={isLandingPage ? "" : "max-w-7xl mx-auto px-6 py-8"}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={
-            <ProtectedRoute>
-              <LandingPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/form" element={
-            <ProtectedRoute>
-              <EntryForm />
-            </ProtectedRoute>
-          } />
-          <Route path="/management" element={
-            <ProtectedRoute>
-              <MedevacManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/database" element={
-            <ProtectedRoute>
-              <DatabaseView />
-            </ProtectedRoute>
-          } />
-          <Route path="/post-data" element={
-            <ProtectedRoute>
-              <PostData />
-            </ProtectedRoute>
-          } />
-          <Route path="/scraper" element={
-            <ProtectedRoute>
-              <ScraperForm />
-            </ProtectedRoute>
-          } />
-          <Route path="/instructions" element={
-            <ProtectedRoute>
-              <Instructions />
-            </ProtectedRoute>
-          } />
-          <Route path="/documentation" element={
-            <ProtectedRoute>
-              <DocumentationPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <MedevacDashboard />
-            </ProtectedRoute>
-          } />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/form" element={<EntryForm />} />
+          <Route path="/management" element={<MedevacManagement />} />
+          <Route path="/database" element={<DatabaseView />} />
+          <Route path="/post-data" element={<PostData />} />
+          <Route path="/scraper" element={<ScraperForm />} />
+          <Route path="/instructions" element={<Instructions />} />
+          <Route path="/documentation" element={<DocumentationPage />} />
+          <Route path="/dashboard" element={<MedevacDashboard />} />
         </Routes>
       </main>
 
