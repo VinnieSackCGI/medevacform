@@ -1,10 +1,4 @@
-const { app } = require('@azure/functions');
-
-app.http('request-account', {
-    methods: ['POST'],
-    route: 'auth/request-account',
-    authLevel: 'anonymous',
-    handler: async (request, context) => {
+module.exports = async function (context, req) {
         try {
             context.log('Request received for account request');
             
