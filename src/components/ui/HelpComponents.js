@@ -208,7 +208,7 @@ export const QuickTips = ({ tips, className = '' }) => {
   );
 };
 
-export default {
+const HelpComponents = {
   Tooltip,
   InfoBubble,
   FieldLabel,
@@ -216,3 +216,5 @@ export default {
   HelpPanel,
   QuickTips
 };
+
+export default HelpComponents;

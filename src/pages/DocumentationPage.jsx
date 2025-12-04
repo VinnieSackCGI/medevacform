@@ -140,32 +140,7 @@ const DocumentationPage = () => {
     }
   };
 
-  const renderMarkdown = (content) => {
-    // Basic markdown rendering - in production you'd use a proper markdown parser
-    return content
-      .split('\n')
-      .map((line, index) => {
-        if (line.startsWith('# ')) {
-          return <h1 key={index} className="text-3xl font-bold text-foreground mb-4 mt-6">{line.slice(2)}</h1>;
-        }
-        if (line.startsWith('## ')) {
-          return <h2 key={index} className="text-2xl font-semibold text-foreground mb-3 mt-5">{line.slice(3)}</h2>;
-        }
-        if (line.startsWith('### ')) {
-          return <h3 key={index} className="text-xl font-semibold text-foreground mb-2 mt-4">{line.slice(4)}</h3>;
-        }
-        if (line.startsWith('- ')) {
-          return <li key={index} className="ml-4 text-muted-foreground">{line.slice(2)}</li>;
-        }
-        if (line.trim() === '') {
-          return <br key={index} />;
-        }
-        if (line.startsWith('**') && line.endsWith('**')) {
-          return <p key={index} className="font-bold text-foreground mb-2">{line.slice(2, -2)}</p>;
-        }
-        return <p key={index} className="text-foreground mb-2">{line}</p>;
-      });
-  };
+
 
   return (
     <div className="min-h-screen bg-white">

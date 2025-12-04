@@ -163,4 +163,5 @@ class MedevacService {
   }
 }
 
-export default new MedevacService();
+const medevacService = new MedevacService();
+export default medevacService;

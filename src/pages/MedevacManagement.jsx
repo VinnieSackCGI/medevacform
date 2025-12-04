@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -8,7 +8,6 @@ import {
   FileText, 
   Edit3, 
   Trash2, 
-  Eye, 
   Plus, 
   Search, 
   Filter,
@@ -30,9 +29,9 @@ const MedevacManagement = () => {
 
   useEffect(() => {
     loadSubmissions();
-  }, []);
+  }, [loadSubmissions]);
 
-  const loadSubmissions = async () => {
+  const loadSubmissions = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -45,7 +44,7 @@ const MedevacManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this MEDEVAC submission?')) {

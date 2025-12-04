@@ -375,7 +375,7 @@ const ExtensionsSection = memo(({ formData, setFormData }) => {
       ...prev,
       extensions: [...extensions, newExtension]
     }));
-  }, [extensions.length, extensions, setFormData]);
+  }, [extensions, setFormData]);
 
   const updateExtension = useCallback((index, updatedExtension) => {
     const updatedExtensions = [...extensions];

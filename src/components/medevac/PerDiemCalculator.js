@@ -4,7 +4,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
 import { Calculator, Plus, Minus } from "lucide-react";
-import { FieldLabel, InfoBubble, QuickTips, SectionHeader } from "../ui/HelpComponents";
+import { FieldLabel, QuickTips, SectionHeader } from "../ui/HelpComponents";
 
 const PerDiemCalculator = ({ formData, setFormData }) => {
   const handleInputChange = (field, value) => {

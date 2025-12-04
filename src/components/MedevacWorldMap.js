@@ -34,36 +34,7 @@ const MedevacWorldMap = ({ routes, cases }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
 
-  // Custom icons for different types
-  const createCustomIcon = (type, cost) => {
-    const color = type === 'origin' ? '#dc2626' : type === 'destination' ? '#16a34a' : '#3b82f6';
-    const size = cost > 50000 ? 'large' : cost > 35000 ? 'medium' : 'small';
-    const iconSize = size === 'large' ? [25, 25] : size === 'medium' ? [20, 20] : [15, 15];
-    
-    return L.divIcon({
-      className: 'custom-div-icon',
-      html: `
-        <div style="
-          background-color: ${color};
-          width: ${iconSize[0]}px;
-          height: ${iconSize[1]}px;
-          border-radius: 50%;
-          border: 3px solid white;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 10px;
-          font-weight: bold;
-          color: white;
-        ">
-          ${type === 'origin' ? '🏥' : type === 'destination' ? '✈️' : '📍'}
-        </div>
-      `,
-      iconSize: iconSize,
-      iconAnchor: [iconSize[0]/2, iconSize[1]/2]
-    });
-  };
+
 
   useEffect(() => {
     if (!mapRef.current) return;

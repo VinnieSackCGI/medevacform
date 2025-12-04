@@ -1,9 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
 import { User } from "lucide-react";
-import { FieldLabel, InfoBubble, QuickTips } from "../ui/HelpComponents";
+import { FieldLabel, QuickTips } from "../ui/HelpComponents";
 
 const PatientDetails = ({ formData, setFormData }) => {
   const handleInputChange = (field, value) => {

@@ -153,4 +153,5 @@ class PerDiemService {
   }
 }
 
-export default new PerDiemService();
+const perDiemService = new PerDiemService();
+export default perDiemService;

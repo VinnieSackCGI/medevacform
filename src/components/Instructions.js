@@ -17,13 +17,10 @@ import {
   Clock,
   Phone,
   Mail,
-  ArrowRight,
   BarChart3,
   Globe,
   TrendingUp,
   Filter,
-  Download,
-  RefreshCw,
   Plane,
   Heart,
   ChevronUp

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/ca
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import ErrorBoundary from "../ui/ErrorBoundary";
-import { Save, Download, Heart, Shield, HelpCircle, ChevronLeft, ChevronRight, Navigation, CheckCircle, AlertTriangle, ArrowUp } from "lucide-react";
+import { Save, Download, Heart, Shield, HelpCircle, ChevronLeft, ChevronRight, Navigation, CheckCircle, AlertTriangle } from "lucide-react";
 
 import BasicInformation from "./BasicInformation";
 import InitialFunding from "./InitialFunding";
@@ -18,7 +18,6 @@ const EnhancedMEDEVACForm = ({ submissionId }) => {
   const [currentSection, setCurrentSection] = useState('basic');
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   // Load existing submission if ID provided
   useEffect(() => {
@@ -111,12 +110,6 @@ const EnhancedMEDEVACForm = ({ submissionId }) => {
   };
 
   // Optimized props to pass to form sections
-  const sectionProps = useMemo(() => ({
-    formData,
-    updateForm,
-    calculatedValues
-  }), [formData, updateForm, calculatedValues]);
-
   const renderCurrentSection = useCallback(() => {
     const props = { 
       formData, 

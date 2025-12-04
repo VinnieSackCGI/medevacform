@@ -133,7 +133,7 @@ const MarkdownRenderer = ({ content }) => {
     });
     
     // Bold text with ** - be more specific
-    text = text.replace(/\*\*([^\*\n]+?)\*\*/g, (match, content) => {
+    text = text.replace(/\*\*([^*\n]+?)\*\*/g, (match, content) => {
       const id = protectedElements.length;
       protectedElements.push({ type: 'bold', content });
       return `__PROTECTED_${id}__`;
@@ -147,7 +147,7 @@ const MarkdownRenderer = ({ content }) => {
     });
     
     // Italic text with single *
-    text = text.replace(/\*([^\*\n]+?)\*/g, (match, content) => {
+    text = text.replace(/\*([^*\n]+?)\*/g, (match, content) => {
       const id = protectedElements.length;
       protectedElements.push({ type: 'italic', content });
       return `__PROTECTED_${id}__`;

@@ -1,18 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { MapPin, Globe } from "lucide-react";
 import { getRegionFromPostCity, getAlphabeticalPostList } from "../../pages/PostData";
 
 const LocationFields = ({ formData, setFormData }) => {
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
 
   const handleSelectChange = (field, value) => {
     const updates = { [field]: value };

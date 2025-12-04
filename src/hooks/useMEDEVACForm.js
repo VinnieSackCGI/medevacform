@@ -95,17 +95,7 @@ export const useMEDEVACForm = () => {
     // Extension funding total
     totalExtensionFunding: (formData.extensions || []).reduce((total, ext) => total + (ext.extensionFundingTotal || 0), 0)
   }), [
-    formData.agencyType,
-    formData.obligationNumber,
-    formData.fundingCableInDate,
-    formData.fundingCableSentDate,
-    formData.initialFundingTotal,
-    formData.amendment,
-    formData.extensions,
-    formData.homePost,
-    formData.initialStartDate,
-    formData.initialEndDate,
-    formData.initialMedevacLocation
+    formData
   ]);
 
   // Update form data with calculated values (object updates)
