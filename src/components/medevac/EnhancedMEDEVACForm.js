@@ -18,6 +18,7 @@ const EnhancedMEDEVACForm = ({ submissionId }) => {
   const [currentSection, setCurrentSection] = useState('basic');
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Load existing submission if ID provided
   useEffect(() => {
