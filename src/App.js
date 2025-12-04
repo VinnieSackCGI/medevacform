@@ -1,11 +1,12 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import './App.css';
 import './styles/themes.css';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Navigation from './components/Navigation';
-import LoginPage from './components/LoginPage';
+import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
 import EntryForm from './pages/EntryForm';
 import DatabaseView from './pages/DatabaseView';
 import PostData from './pages/PostData';
@@ -16,26 +17,107 @@ import DocumentationPage from './pages/DocumentationPage';
 import MedevacDashboard from './pages/MedevacDashboard';
 import MedevacManagement from './pages/MedevacManagement';
 
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+  
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
 function AppContent() {
+  const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
-  const isLandingPage = location.pathname === '/';
+  const isLoginPage = location.pathname === '/login';
+  const isPublicLandingPage = location.pathname === '/' && !isAuthenticated;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading MEDEVAC System...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If user is authenticated and tries to access login page, redirect to dashboard
+  if (isAuthenticated && isLoginPage) {
+    return <Navigate to="/dashboard" />;
+  }
+
+  // If user is authenticated and goes to root, redirect to dashboard
+  if (isAuthenticated && location.pathname === '/') {
+    return <Navigate to="/dashboard" />;
+  }
 
   return (
     <div className="min-h-screen bg-theme-bg-primary text-theme-text-primary transition-colors duration-200">
-      <Navigation />
+      {!isLoginPage && <Navigation />}
       
-      <main className={isLandingPage ? "" : "max-w-7xl mx-auto px-6 py-8"}>
+      <main className={isPublicLandingPage || isLoginPage ? "" : "max-w-7xl mx-auto px-6 py-8"}>
         <Routes>
+          {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/form" element={<EntryForm />} />
-          <Route path="/management" element={<MedevacManagement />} />
-          <Route path="/database" element={<DatabaseView />} />
-          <Route path="/post-data" element={<PostData />} />
-          <Route path="/scraper" element={<ScraperForm />} />
-          <Route path="/instructions" element={<Instructions />} />
-          <Route path="/documentation" element={<DocumentationPage />} />
-          <Route path="/dashboard" element={<MedevacDashboard />} />
+          {!isAuthenticated && <Route path="/" element={<LandingPage />} />}
+          
+          {/* Protected routes */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/form" element={
+            <ProtectedRoute>
+              <EntryForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/form/:id" element={
+            <ProtectedRoute>
+              <EntryForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/management" element={
+            <ProtectedRoute>
+              <MedevacManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/database" element={
+            <ProtectedRoute>
+              <DatabaseView />
+            </ProtectedRoute>
+          } />
+          <Route path="/post-data" element={
+            <ProtectedRoute>
+              <PostData />
+            </ProtectedRoute>
+          } />
+          <Route path="/scraper" element={
+            <ProtectedRoute>
+              <ScraperForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/instructions" element={
+            <ProtectedRoute>
+              <Instructions />
+            </ProtectedRoute>
+          } />
+          <Route path="/documentation" element={
+            <ProtectedRoute>
+              <DocumentationPage />
+            </ProtectedRoute>
+          } />
+          
+          {/* Redirect authenticated users from root to dashboard */}
+          {isAuthenticated && <Route path="/" element={<Navigate to="/dashboard" />} />}
         </Routes>
       </main>
 
