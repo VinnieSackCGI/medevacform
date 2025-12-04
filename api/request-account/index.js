@@ -1,65 +1,65 @@
 const { app } = require('@azure/functions');
 
-// Simple in-memory storage for demo (use Azure SQL Database in production)
-const userRequests = [];
-let nextId = 1;
-
 app.http('request-account', {
     methods: ['POST'],
     route: 'auth/request-account',
     authLevel: 'anonymous',
     handler: async (request, context) => {
         try {
+            context.log('Request received for account request');
+            
+            // Log the request details
             const body = await request.json();
+            context.log('Request body:', JSON.stringify(body, null, 2));
+            
             const { firstName, lastName, email, requestedUsername, justification } = body;
             
             // Validate required fields
             if (!firstName || !lastName || !email || !requestedUsername) {
+                context.log('Missing required fields');
                 return {
                     status: 400,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     jsonBody: { error: 'All fields except justification are required' }
                 };
             }
             
-            // Check if email already exists
-            const existingRequest = userRequests.find(req => req.email === email);
-            if (existingRequest) {
-                return {
-                    status: 400,
-                    jsonBody: { error: 'An account request with this email already exists' }
-                };
-            }
-            
-            // Create new request
-            const newRequest = {
-                id: nextId++,
+            // For now, just log the request (you can check Azure Function logs)
+            context.log('Account request submitted:', {
                 firstName,
                 lastName,
                 email,
                 requestedUsername,
-                justification: justification || '',
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            };
+                justification,
+                timestamp: new Date().toISOString()
+            });
             
-            userRequests.push(newRequest);
-            
-            context.log('New account request created:', { id: newRequest.id, email });
-            
-            return {
+            // Return success response
+            const response = {
                 status: 200,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 jsonBody: { 
                     message: 'Account request submitted successfully. You will be notified when reviewed.',
-                    requestId: newRequest.id 
+                    requestId: Date.now() // Simple ID for now
                 }
             };
+            
+            context.log('Sending response:', JSON.stringify(response, null, 2));
+            return response;
             
         } catch (error) {
             context.log.error('Error processing account request:', error);
             
             return {
                 status: 500,
-                jsonBody: { error: 'Failed to submit account request' }
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                jsonBody: { error: 'Failed to submit account request. Please try again.' }
             };
         }
     }
