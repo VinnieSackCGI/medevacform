@@ -7,15 +7,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { AlertCircle, User, Shield, LogIn, UserPlus } from 'lucide-react';
 
 const LoginPage = () => {
-  const { login, register } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const { login, user } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    post: ''
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

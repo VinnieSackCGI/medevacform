@@ -388,6 +388,45 @@ const dbHelpers = {
     }
   },
 
+  // User requests
+  async createUserRequest(firstName, lastName, email, requestedUsername, justification) {
+    try {
+      const result = await pool.request()
+        .input('first_name', sql.NVarChar, firstName)
+        .input('last_name', sql.NVarChar, lastName)
+        .input('email', sql.NVarChar, email)
+        .input('requested_username', sql.NVarChar, requestedUsername)
+        .input('justification', sql.NVarChar, justification)
+        .query(`
+          INSERT INTO user_requests (first_name, last_name, email, requested_username, justification)
+          OUTPUT INSERTED.id
+          VALUES (@first_name, @last_name, @email, @requested_username, @justification)
+        `);
+
+      return { id: result.recordset[0].id };
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async getUserRequests(status = null) {
+    try {
+      let query = 'SELECT * FROM user_requests';
+      const request = pool.request();
+      
+      if (status) {
+        query += ' WHERE status = @status';
+        request.input('status', sql.NVarChar, status);
+      }
+      
+      query += ' ORDER BY created_at DESC';
+      const result = await request.query(query);
+      return result.recordset;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   // Activity logging
   async logActivity(userId, action, resourceType = null, resourceId = null, details = null, ipAddress = null) {
     try {

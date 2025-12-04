@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRightIcon, StarIcon, ShieldCheckIcon, GlobeAmericasIcon } from '@heroicons/react/24/outline';
 import { ChevronUp } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const LandingPage = () => {
+  const { user } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -118,27 +120,48 @@ const LandingPage = () => {
                   isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
                 }`}
               >
-                <Link 
-                  to="/form"
-                  className="group bg-accent text-accent-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-accent/90 transform hover:scale-105 transition-all duration-300 shadow-2xl inline-flex items-center font-open-sans"
-                >
-                  Start New Case
-                  <ChevronRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </Link>
-                
-                <Link
-                  to="/dashboard"
-                  className="group bg-transparent border-2 border-primary-foreground text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-foreground hover:text-primary transform hover:scale-105 transition-all duration-300 font-open-sans"
-                >
-                  View Dashboard
-                </Link>
-                
-                <Link
-                  to="/database"
-                  className="group bg-transparent border-2 border-primary-foreground/60 text-primary-foreground/80 px-6 py-3 rounded-full font-semibold text-base hover:bg-primary-foreground/20 hover:text-primary-foreground transform hover:scale-105 transition-all duration-300 font-open-sans"
-                >
-                  View Database
-                </Link>
+                {user ? (
+                  <>
+                    <Link 
+                      to="/form"
+                      className="group bg-accent text-accent-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-accent/90 transform hover:scale-105 transition-all duration-300 shadow-2xl inline-flex items-center font-open-sans"
+                    >
+                      Start New Case
+                      <ChevronRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Link>
+                    
+                    <Link
+                      to="/dashboard"
+                      className="group bg-transparent border-2 border-primary-foreground text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-foreground hover:text-primary transform hover:scale-105 transition-all duration-300 font-open-sans"
+                    >
+                      View Dashboard
+                    </Link>
+                    
+                    <Link
+                      to="/database"
+                      className="group bg-transparent border-2 border-primary-foreground/60 text-primary-foreground/80 px-6 py-3 rounded-full font-semibold text-base hover:bg-primary-foreground/20 hover:text-primary-foreground transform hover:scale-105 transition-all duration-300 font-open-sans"
+                    >
+                      View Database
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link 
+                      to="/login"
+                      className="group bg-accent text-accent-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-accent/90 transform hover:scale-105 transition-all duration-300 shadow-2xl inline-flex items-center font-open-sans"
+                    >
+                      Login to System
+                      <ChevronRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Link>
+                    
+                    <Link
+                      to="/request-account"
+                      className="group bg-transparent border-2 border-primary-foreground text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-foreground hover:text-primary transform hover:scale-105 transition-all duration-300 font-open-sans"
+                    >
+                      Request Access
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

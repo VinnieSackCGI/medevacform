@@ -24,16 +24,18 @@ export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
 
-  const navItems = [
-    { path: '/', label: 'Home', icon: HomeIcon },
-    { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon },
-    { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon },
-    { path: '/dashboard', label: 'Analytics', icon: ChartBarIcon },
-    { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon },
-    { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon },
-    { path: '/instructions', label: 'Instructions', icon: BookOpenIcon },
-    { path: '/documentation', label: 'Documentation', icon: FolderIcon }
+  const allNavItems = [
+    { path: '/', label: 'Home', icon: HomeIcon, requiresAuth: false },
+    { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon, requiresAuth: true },
+    { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon, requiresAuth: true },
+    { path: '/dashboard', label: 'Analytics', icon: ChartBarIcon, requiresAuth: true },
+    { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon, requiresAuth: true },
+    { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon, requiresAuth: true },
+    { path: '/instructions', label: 'Instructions', icon: BookOpenIcon, requiresAuth: true },
+    { path: '/documentation', label: 'Documentation', icon: FolderIcon, requiresAuth: true }
   ];
+
+  const navItems = allNavItems.filter(item => !item.requiresAuth || isAuthenticated);
 
   return (
     <>
@@ -63,13 +65,9 @@ export default function Navigation() {
               </div>
             </div>
 
-            {/* Status Indicator & Theme Toggle */}
-            <div className="hidden lg:flex items-center space-x-4">
+            {/* Theme Toggle */}
+            <div className="hidden lg:flex items-center">
               <ThemeToggle variant="ghost" />
-              <div className="flex items-center space-x-2 bg-black-pearl/40 rounded-full px-3 py-1.5 border border-gold-accent/30">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs font-medium text-gray-200 font-open-sans">OPERATIONAL</span>
-              </div>
             </div>
           </div>
         </div>
@@ -116,10 +114,8 @@ export default function Navigation() {
               })}
             </nav>
 
-            {/* Desktop User Menu & Theme Toggle */}
+            {/* Desktop User Menu */}
             <div className="hidden md:flex items-center space-x-4">
-              <ThemeToggle variant="ghost" size="sm" />
-              
               {isAuthenticated && user && (
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-2 px-3 py-2 bg-theme-bg-secondary rounded-lg">
@@ -139,9 +135,8 @@ export default function Navigation() {
               )}
             </div>
 
-            {/* Mobile menu button & theme toggle */}
-            <div className="md:hidden w-full flex justify-between items-center">
-              <ThemeToggle variant="ghost" size="sm" />
+            {/* Mobile menu button */}
+            <div className="md:hidden w-full flex justify-end items-center">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="inline-flex items-center justify-center p-3 rounded-lg text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-bg-secondary transition-all duration-200"

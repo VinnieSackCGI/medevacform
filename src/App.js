@@ -5,7 +5,8 @@ import './styles/themes.css';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Navigation from './components/Navigation';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/SimpleLoginPage';
+import RequestAccountPage from './pages/RequestAccountPage';
 import Dashboard from './pages/Dashboard';
 import EntryForm from './pages/EntryForm';
 import DatabaseView from './pages/DatabaseView';
@@ -67,6 +68,7 @@ function AppContent() {
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/request-account" element={<RequestAccountPage />} />
           {!isAuthenticated && <Route path="/" element={<LandingPage />} />}
           
           {/* Protected routes */}

@@ -34,6 +34,37 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
+// User request routes
+app.post('/api/auth/request-account', async (req, res) => {
+  try {
+    const { firstName, lastName, email, requestedUsername, justification } = req.body;
+    
+    if (!firstName || !lastName || !email || !requestedUsername) {
+      return res.status(400).json({ error: 'All fields except justification are required' });
+    }
+
+    const userRequest = await dbHelpers.createUserRequest(
+      firstName, 
+      lastName, 
+      email, 
+      requestedUsername, 
+      justification || ''
+    );
+
+    res.json({ 
+      message: 'Account request submitted successfully. You will be notified when reviewed.',
+      requestId: userRequest.id 
+    });
+  } catch (error) {
+    console.error('Error creating user request:', error);
+    if (error.code === 'EREQUEST' && error.message.includes('UNIQUE KEY')) {
+      res.status(400).json({ error: 'An account request with this email already exists' });
+    } else {
+      res.status(500).json({ error: 'Failed to submit account request' });
+    }
+  }
+});
+
 // Auth routes
 app.post('/api/auth/register', async (req, res) => {
   try {

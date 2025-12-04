@@ -125,6 +125,24 @@ async function setupDatabase() {
     `);
     console.log('✅ Activity log table ready');
 
+    // User requests table
+    await pool.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='user_requests' AND xtype='U')
+      CREATE TABLE user_requests (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        first_name NVARCHAR(50) NOT NULL,
+        last_name NVARCHAR(50) NOT NULL,
+        email NVARCHAR(100) UNIQUE NOT NULL,
+        requested_username NVARCHAR(50) NOT NULL,
+        justification NVARCHAR(MAX),
+        status NVARCHAR(20) DEFAULT 'pending',
+        created_at DATETIME2 DEFAULT GETDATE(),
+        reviewed_at DATETIME2,
+        reviewed_by NVARCHAR(50)
+      )
+    `);
+    console.log('✅ User requests table ready');
+
     // Create indices for performance
     console.log('📈 Creating indices...');
     
