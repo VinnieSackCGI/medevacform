@@ -53,7 +53,7 @@ const AccessRequestAdmin = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          requestId: selectedRequest.request_id,
+          requestId: selectedRequest.id,
           approverName: approverName,
           notes: reviewNotes
         })
@@ -95,7 +95,7 @@ const AccessRequestAdmin = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          requestId: selectedRequest.request_id,
+          requestId: selectedRequest.id,
           approverName: approverName,
           notes: reviewNotes
         })
