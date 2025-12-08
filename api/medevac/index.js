@@ -96,16 +96,25 @@ async function handleCreate(context, req, pool) {
     try {
         const formData = req.body;
         
+        // Extract fields with safe defaults - all fields are optional
+        const patientName = formData.patientName || formData.patient_name || null;
+        const obligationNumber = formData.obligationNumber || formData.obligation_number || null;
+        const originPost = formData.homePost || formData.originPost || formData.origin_post || null;
+        const destinationLocation = formData.initialMedevacLocation || formData.destinationLocation || formData.destination_location || null;
+        const medevacType = formData.medevacType || formData.medevac_type || null;
+        const status = formData.status || 'pending';
+        const createdBy = formData.createdBy || formData.created_by || 'system';
+        
         // Insert into database
         const result = await pool.request()
-            .input('patient_name', sql.NVarChar(100), formData.patientName || '')
-            .input('obligation_number', sql.NVarChar(50), formData.obligationNumber || '')
-            .input('origin_post', sql.NVarChar(100), formData.originPost || '')
-            .input('destination_location', sql.NVarChar(100), formData.destinationLocation || '')
-            .input('medevac_type', sql.NVarChar(50), formData.medevacType || '')
-            .input('status', sql.NVarChar(20), formData.status || 'draft')
+            .input('patient_name', sql.NVarChar(100), patientName)
+            .input('obligation_number', sql.NVarChar(50), obligationNumber)
+            .input('origin_post', sql.NVarChar(100), originPost)
+            .input('destination_location', sql.NVarChar(100), destinationLocation)
+            .input('medevac_type', sql.NVarChar(50), medevacType)
+            .input('status', sql.NVarChar(20), status)
             .input('form_data', sql.NVarChar(sql.MAX), JSON.stringify(formData))
-            .input('created_by', sql.NVarChar(100), formData.createdBy || 'unknown')
+            .input('created_by', sql.NVarChar(100), createdBy)
             .query(`
                 INSERT INTO medevac_submissions 
                 (patient_name, obligation_number, origin_post, destination_location, medevac_type, status, form_data, created_by, created_at, updated_at)
@@ -114,6 +123,14 @@ async function handleCreate(context, req, pool) {
             `);
 
         const submission = result.recordset[0];
+        
+        // Parse form_data safely
+        let parsedFormData = {};
+        try {
+            parsedFormData = JSON.parse(submission.form_data || '{}');
+        } catch (e) {
+            context.log.error('Error parsing form_data:', e);
+        }
 
         context.res = {
             status: 201,
@@ -130,16 +147,23 @@ async function handleCreate(context, req, pool) {
                     medevacType: submission.medevac_type,
                     status: submission.status,
                     createdAt: submission.created_at,
-                    ...JSON.parse(submission.form_data)
+                    updatedAt: submission.updated_at,
+                    ...parsedFormData
                 }
             }
         };
     } catch (error) {
         context.log.error('Error creating submission:', error);
+        context.log.error('Error stack:', error.stack);
+        context.log.error('Request body:', JSON.stringify(req.body));
         context.res = {
             status: 500,
             headers: getCorsHeaders(),
-            body: { error: "Failed to create submission", message: error.message }
+            body: { 
+                error: "Failed to create submission", 
+                message: error.message,
+                details: error.toString()
+            }
         };
     }
 }

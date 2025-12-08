@@ -14,7 +14,7 @@ import useMEDEVACForm from "../../hooks/useMEDEVACForm";
 import { getValidationStatus } from "../../utils/formValidation";
 
 const EnhancedMEDEVACForm = ({ submissionId }) => {
-  const { formData, updateForm, calculatedValues, saveForm, loadForm, submitForm, exportForm } = useMEDEVACForm();
+  const { formData, updateForm, updateFormData, calculatedValues, saveForm, loadForm, submitForm, exportForm } = useMEDEVACForm();
   const [currentSection, setCurrentSection] = useState('basic');
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -116,14 +116,13 @@ const EnhancedMEDEVACForm = ({ submissionId }) => {
       formData, 
       setFormData: (updater) => {
         if (typeof updater === 'function') {
+          // Call the updater with current formData to get the new state
           const newData = updater(formData);
-          Object.keys(newData).forEach(key => {
-            if (newData[key] !== formData[key]) {
-              updateForm(key, newData[key]);
-            }
-          });
+          // Use updateFormData for batch updates to preserve all fields
+          updateFormData(newData);
         } else {
-          console.warn('setFormData called with non-function:', updater);
+          // Direct object update
+          updateFormData(updater);
         }
       }
     };
@@ -140,7 +139,7 @@ const EnhancedMEDEVACForm = ({ submissionId }) => {
       default:
         return <BasicInformation {...props} />;
     }
-  }, [currentSection, formData, updateForm]);
+  }, [currentSection, formData, updateFormData]);
 
   return (
     <ErrorBoundary>

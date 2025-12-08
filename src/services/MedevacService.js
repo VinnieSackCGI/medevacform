@@ -7,6 +7,8 @@ class MedevacService {
   // Create a new MEDEVAC submission
   async createSubmission(formData) {
     try {
+      console.log('Creating MEDEVAC submission with data:', formData);
+      
       const response = await fetch(`${API_BASE_URL}/medevac`, {
         method: 'POST',
         headers: {
@@ -16,8 +18,15 @@ class MedevacService {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create submission');
+        const errorText = await response.text();
+        console.error('Server error response:', errorText);
+        let errorObj;
+        try {
+          errorObj = JSON.parse(errorText);
+        } catch (e) {
+          throw new Error(errorText || 'Failed to create submission');
+        }
+        throw new Error(errorObj.message || errorObj.error || 'Failed to create submission');
       }
 
       return await response.json();
