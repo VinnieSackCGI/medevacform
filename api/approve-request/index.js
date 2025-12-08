@@ -82,8 +82,8 @@ module.exports = async function (context, req) {
 
         // Check if request exists
         const checkResult = await pool.request()
-            .input('requestId', sql.NVarChar(50), requestId)
-            .query('SELECT * FROM access_requests WHERE request_id = @requestId');
+            .input('requestId', sql.Int, requestId)
+            .query('SELECT * FROM user_requests WHERE id = @requestId');
 
         if (checkResult.recordset.length === 0) {
             context.res = {
@@ -113,20 +113,20 @@ module.exports = async function (context, req) {
 
         // Update the request
         const updateResult = await pool.request()
-            .input('requestId', sql.NVarChar(50), requestId)
+            .input('requestId', sql.Int, requestId)
             .input('status', sql.NVarChar(50), action === 'approve' ? 'approved' : 'rejected')
             .input('reviewedBy', sql.NVarChar(255), approverName)
             .input('approvalNotes', sql.NVarChar(sql.MAX), notes || '')
             .query(`
-                UPDATE access_requests
+                UPDATE user_requests
                 SET 
                     status = @status,
                     reviewed_at = GETUTCDATE(),
                     reviewed_by = @reviewedBy,
-                    approval_notes = @approvalNotes
-                WHERE request_id = @requestId
+                    notes = @approvalNotes
+                WHERE id = @requestId
                 
-                SELECT * FROM access_requests WHERE request_id = @requestId
+                SELECT * FROM user_requests WHERE id = @requestId
             `);
 
         const updatedRequest = updateResult.recordset[0];
@@ -138,13 +138,13 @@ module.exports = async function (context, req) {
                 success: true,
                 message: `Access request ${action}ed successfully`,
                 data: {
-                    requestId: updatedRequest.request_id,
+                    requestId: updatedRequest.id,
                     email: updatedRequest.email,
-                    fullName: updatedRequest.full_name,
+                    fullName: `${updatedRequest.first_name} ${updatedRequest.last_name}`,
                     status: updatedRequest.status,
                     reviewedBy: updatedRequest.reviewed_by,
                     reviewedAt: updatedRequest.reviewed_at,
-                    notes: updatedRequest.approval_notes
+                    notes: updatedRequest.notes
                 }
             }
         };
