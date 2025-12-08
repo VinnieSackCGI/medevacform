@@ -212,6 +212,7 @@ export const useMEDEVACForm = () => {
   return {
     formData: mergedFormData,
     updateForm,
+    updateFormData,
     setFormData: updateFormData,
     resetForm,
     saveForm,
