@@ -35,8 +35,14 @@ const Dashboard = () => {
       setLoading(true);
       setError('');
       
-      const response = await authenticatedFetch('/api/medevacs');
-      const data = await response.json();
+      const response = await authenticatedFetch('/api/medevac');
+      
+      if (!response.ok) {
+        throw new Error('Failed to load MEDEVACs');
+      }
+      
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : { medevacs: [] };
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to load MEDEVACs');
@@ -57,7 +63,7 @@ const Dashboard = () => {
     }
 
     try {
-      const response = await authenticatedFetch(`/api/medevacs/${id}`, {
+      const response = await authenticatedFetch(`/api/medevac/${id}`, {
         method: 'DELETE'
       });
 

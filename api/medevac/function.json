@@ -12,7 +12,7 @@
         "delete",
         "options"
       ],
-      "route": "medevac{s:regex(s?)}}/{id?}"
+      "route": "medevac/{id?}"
     },
     {
       "type": "http",
