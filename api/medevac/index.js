@@ -233,6 +233,7 @@ async function handleGetAll(context, req, containerClient) {
             status: 200,
             headers: getCorsHeaders(),
             body: {
+                medevacs: paginatedSubmissions,
                 submissions: paginatedSubmissions,
                 total: total,
                 limit: parseInt(limit),
