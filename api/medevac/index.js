@@ -1,4 +1,26 @@
-const { BlobServiceClient } = require('@azure/storage-blob');
+const sql = require('mssql');
+
+// Database configuration from environment variables
+const dbConfig = {
+  user: process.env.AZURE_SQL_USER || 'medevac_admin',
+  password: process.env.AZURE_SQL_PASSWORD,
+  server: process.env.AZURE_SQL_SERVER,
+  database: process.env.AZURE_SQL_DATABASE || 'medevac_db',
+  options: {
+    encrypt: true,
+    trustServerCertificate: false
+  }
+};
+
+let pool = null;
+
+// Initialize database connection
+const getPool = async () => {
+  if (!pool) {
+    pool = await sql.connect(dbConfig);
+  }
+  return pool;
+};
 
 module.exports = async function (context, req) {
     const method = req.method;
@@ -14,32 +36,17 @@ module.exports = async function (context, req) {
     }
 
     try {
-        const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
-        context.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('STORAGE')));
-        
-        if (!connectionString) {
-        context.log.error('Storage connection string not found in environment variables');
-        context.res = {
-          status: 500,
-          headers: getCorsHeaders(),
-          body: { 
-            error: "Storage connection string not configured",
-            debug: "Environment check failed"
-          }
-        };
-        return;
-      }        const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
-        const containerClient = blobServiceClient.getContainerClient('application-data');
+        const pool = await getPool();
 
         switch (method) {
             case 'POST':
-                await handleCreate(context, req, containerClient);
+                await handleCreate(context, req, pool);
                 break;
             case 'GET':
                 if (id) {
-                    await handleGetById(context, id, containerClient);
+                    await handleGetById(context, id, pool);
                 } else {
-                    await handleGetAll(context, req, containerClient);
+                    await handleGetAll(context, req, pool);
                 }
                 break;
             case 'PUT':
@@ -51,7 +58,7 @@ module.exports = async function (context, req) {
                     };
                     return;
                 }
-                await handleUpdate(context, req, id, containerClient);
+                await handleUpdate(context, req, id, pool);
                 break;
             case 'DELETE':
                 if (!id) {
@@ -62,7 +69,7 @@ module.exports = async function (context, req) {
                     };
                     return;
                 }
-                await handleDelete(context, id, containerClient);
+                await handleDelete(context, id, pool);
                 break;
             default:
                 context.res = {
@@ -76,114 +83,103 @@ module.exports = async function (context, req) {
         context.res = {
             status: 500,
             headers: getCorsHeaders(),
-            body: { error: "Internal server error" }
+            body: { 
+                error: "Internal server error",
+                message: error.message 
+            }
         };
     }
 };
 
 // Create new MEDEVAC submission
-async function handleCreate(context, req, containerClient) {
+async function handleCreate(context, req, pool) {
     try {
         const formData = req.body;
         
-        if (!formData || !formData.patientName) {
-            context.res = {
-                status: 400,
-                headers: getCorsHeaders(),
-                body: { error: "Patient name is required" }
-            };
-            return;
-        }
+        // Insert into database
+        const result = await pool.request()
+            .input('patient_name', sql.NVarChar(100), formData.patientName || '')
+            .input('obligation_number', sql.NVarChar(50), formData.obligationNumber || '')
+            .input('origin_post', sql.NVarChar(100), formData.originPost || '')
+            .input('destination_location', sql.NVarChar(100), formData.destinationLocation || '')
+            .input('medevac_type', sql.NVarChar(50), formData.medevacType || '')
+            .input('status', sql.NVarChar(20), formData.status || 'draft')
+            .input('form_data', sql.NVarChar(sql.MAX), JSON.stringify(formData))
+            .input('created_by', sql.NVarChar(100), formData.createdBy || 'unknown')
+            .query(`
+                INSERT INTO medevac_submissions 
+                (patient_name, obligation_number, origin_post, destination_location, medevac_type, status, form_data, created_by, created_at, updated_at)
+                OUTPUT INSERTED.*
+                VALUES (@patient_name, @obligation_number, @origin_post, @destination_location, @medevac_type, @status, @form_data, @created_by, GETUTCDATE(), GETUTCDATE())
+            `);
 
-        // Generate unique ID
-        const id = generateMedevacId();
-        const timestamp = new Date().toISOString();
-        
-        // Get user info from Static Web Apps auth
-        const userHeader = req.headers['x-ms-client-principal'];
-        let userInfo = null;
-        if (userHeader) {
-            try {
-                const decoded = Buffer.from(userHeader, 'base64').toString('ascii');
-                userInfo = JSON.parse(decoded);
-            } catch (e) {
-                context.log('Could not parse user info:', e);
-            }
-        }
-
-        const submission = {
-            id: id,
-            ...formData,
-            createdAt: timestamp,
-            updatedAt: timestamp,
-            status: formData.status || 'draft',
-            createdBy: userInfo ? {
-                userId: userInfo.userId,
-                userDetails: userInfo.userDetails,
-                identityProvider: userInfo.identityProvider
-            } : null
-        };
-
-        const blobName = `medevac-submissions/${id}.json`;
-        const blobClient = containerClient.getBlockBlobClient(blobName);
-        
-        await blobClient.upload(
-            JSON.stringify(submission, null, 2),
-            JSON.stringify(submission, null, 2).length,
-            {
-                blobHTTPHeaders: { blobContentType: 'application/json' }
-            }
-        );
-
-        // Update index
-        await updateSubmissionIndex(containerClient, submission, 'create');
+        const submission = result.recordset[0];
 
         context.res = {
             status: 201,
             headers: getCorsHeaders(),
-            body: { 
-                message: "MEDEVAC submission created successfully",
-                id: id,
-                submission: submission
+            body: {
+                success: true,
+                id: submission.id,
+                submission: {
+                    id: submission.id,
+                    patientName: submission.patient_name,
+                    obligationNumber: submission.obligation_number,
+                    originPost: submission.origin_post,
+                    destinationLocation: submission.destination_location,
+                    medevacType: submission.medevac_type,
+                    status: submission.status,
+                    createdAt: submission.created_at,
+                    ...JSON.parse(submission.form_data)
+                }
             }
         };
-
     } catch (error) {
         context.log.error('Error creating submission:', error);
         context.res = {
             status: 500,
             headers: getCorsHeaders(),
-            body: { error: "Failed to create submission" }
+            body: { error: "Failed to create submission", message: error.message }
         };
     }
 }
 
 // Get submission by ID
-async function handleGetById(context, id, containerClient) {
+async function handleGetById(context, id, pool) {
     try {
-        const blobName = `medevac-submissions/${id}.json`;
-        const blobClient = containerClient.getBlockBlobClient(blobName);
-        
-        const exists = await blobClient.exists();
-        if (!exists) {
+        const result = await pool.request()
+            .input('id', sql.Int, parseInt(id))
+            .query('SELECT * FROM medevac_submissions WHERE id = @id');
+
+        if (result.recordset.length === 0) {
             context.res = {
                 status: 404,
                 headers: getCorsHeaders(),
-                body: { error: "MEDEVAC submission not found" }
+                body: { error: "Submission not found" }
             };
             return;
         }
 
-        const downloadResponse = await blobClient.download();
-        const data = await streamToString(downloadResponse.readableStreamBody);
-        const submission = JSON.parse(data);
+        const submission = result.recordset[0];
+        const formData = JSON.parse(submission.form_data || '{}');
 
         context.res = {
             status: 200,
             headers: getCorsHeaders(),
-            body: submission
+            body: {
+                id: submission.id,
+                patientName: submission.patient_name,
+                obligationNumber: submission.obligation_number,
+                originPost: submission.origin_post,
+                destinationLocation: submission.destination_location,
+                medevacType: submission.medevac_type,
+                status: submission.status,
+                createdAt: submission.created_at,
+                updatedAt: submission.updated_at,
+                createdBy: submission.created_by,
+                ...formData
+            }
         };
-
     } catch (error) {
         context.log.error('Error getting submission:', error);
         context.res = {
@@ -195,124 +191,124 @@ async function handleGetById(context, id, containerClient) {
 }
 
 // Get all submissions with optional filtering
-async function handleGetAll(context, req, containerClient) {
+async function handleGetAll(context, req, pool) {
     try {
         const { status, patientName, limit = 50, offset = 0 } = req.query;
         
-        // Get submissions index
-        const indexBlobClient = containerClient.getBlockBlobClient('medevac-submissions/index.json');
-        const indexExists = await indexBlobClient.exists();
-        
-        let submissions = [];
-        
-        if (indexExists) {
-            const indexData = await streamToString((await indexBlobClient.download()).readableStreamBody);
-            const index = JSON.parse(indexData);
-            submissions = index.submissions || [];
-        }
+        let query = 'SELECT * FROM medevac_submissions WHERE 1=1';
+        const request = pool.request();
 
-        // Apply filters
-        let filteredSubmissions = submissions;
-        
         if (status) {
-            filteredSubmissions = filteredSubmissions.filter(s => s.status === status);
-        }
-        
-        if (patientName) {
-            filteredSubmissions = filteredSubmissions.filter(s => 
-                s.patientName.toLowerCase().includes(patientName.toLowerCase())
-            );
+            query += ' AND status = @status';
+            request.input('status', sql.NVarChar(20), status);
         }
 
-        // Apply pagination
-        const total = filteredSubmissions.length;
-        const paginatedSubmissions = filteredSubmissions
-            .slice(parseInt(offset), parseInt(offset) + parseInt(limit));
+        if (patientName) {
+            query += ' AND patient_name LIKE @patientName';
+            request.input('patientName', sql.NVarChar(100), `%${patientName}%`);
+        }
+
+        query += ' ORDER BY created_at DESC';
+        query += ' OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY';
+        
+        request.input('offset', sql.Int, parseInt(offset));
+        request.input('limit', sql.Int, parseInt(limit));
+
+        const result = await request.query(query);
+        
+        const submissions = result.recordset.map(sub => {
+            const formData = JSON.parse(sub.form_data || '{}');
+            return {
+                id: sub.id,
+                patientName: sub.patient_name,
+                obligationNumber: sub.obligation_number,
+                originPost: sub.origin_post,
+                destinationLocation: sub.destination_location,
+                medevacType: sub.medevac_type,
+                status: sub.status,
+                createdAt: sub.created_at,
+                updatedAt: sub.updated_at,
+                createdBy: sub.created_by,
+                ...formData
+            };
+        });
 
         context.res = {
             status: 200,
             headers: getCorsHeaders(),
             body: {
-                medevacs: paginatedSubmissions,
-                submissions: paginatedSubmissions,
-                total: total,
+                medevacs: submissions,
+                submissions: submissions,
+                total: submissions.length,
                 limit: parseInt(limit),
                 offset: parseInt(offset)
             }
         };
-
     } catch (error) {
         context.log.error('Error getting submissions:', error);
         context.res = {
             status: 500,
             headers: getCorsHeaders(),
-            body: { error: "Failed to retrieve submissions" }
+            body: { error: "Failed to retrieve submissions", message: error.message }
         };
     }
 }
 
-// Update existing submission
-async function handleUpdate(context, req, id, containerClient) {
+// Update submission
+async function handleUpdate(context, req, id, pool) {
     try {
-        const updates = req.body;
-        
-        if (!updates) {
-            context.res = {
-                status: 400,
-                headers: getCorsHeaders(),
-                body: { error: "Update data is required" }
-            };
-            return;
-        }
+        const formData = req.body;
 
-        const blobName = `medevac-submissions/${id}.json`;
-        const blobClient = containerClient.getBlockBlobClient(blobName);
-        
-        const exists = await blobClient.exists();
-        if (!exists) {
+        const result = await pool.request()
+            .input('id', sql.Int, parseInt(id))
+            .input('patient_name', sql.NVarChar(100), formData.patientName || '')
+            .input('obligation_number', sql.NVarChar(50), formData.obligationNumber || '')
+            .input('origin_post', sql.NVarChar(100), formData.originPost || '')
+            .input('destination_location', sql.NVarChar(100), formData.destinationLocation || '')
+            .input('medevac_type', sql.NVarChar(50), formData.medevacType || '')
+            .input('status', sql.NVarChar(20), formData.status || 'draft')
+            .input('form_data', sql.NVarChar(sql.MAX), JSON.stringify(formData))
+            .query(`
+                UPDATE medevac_submissions
+                SET 
+                    patient_name = @patient_name,
+                    obligation_number = @obligation_number,
+                    origin_post = @origin_post,
+                    destination_location = @destination_location,
+                    medevac_type = @medevac_type,
+                    status = @status,
+                    form_data = @form_data,
+                    updated_at = GETUTCDATE()
+                OUTPUT INSERTED.*
+                WHERE id = @id
+            `);
+
+        if (result.recordset.length === 0) {
             context.res = {
                 status: 404,
                 headers: getCorsHeaders(),
-                body: { error: "MEDEVAC submission not found" }
+                body: { error: "Submission not found" }
             };
             return;
         }
 
-        // Get existing submission
-        const downloadResponse = await blobClient.download();
-        const data = await streamToString(downloadResponse.readableStreamBody);
-        const existingSubmission = JSON.parse(data);
-
-        // Merge updates
-        const updatedSubmission = {
-            ...existingSubmission,
-            ...updates,
-            id: id, // Preserve ID
-            createdAt: existingSubmission.createdAt, // Preserve creation date
-            updatedAt: new Date().toISOString()
-        };
-
-        // Save updated submission
-        await blobClient.upload(
-            JSON.stringify(updatedSubmission, null, 2),
-            JSON.stringify(updatedSubmission, null, 2).length,
-            {
-                blobHTTPHeaders: { blobContentType: 'application/json' }
-            }
-        );
-
-        // Update index
-        await updateSubmissionIndex(containerClient, updatedSubmission, 'update');
+        const submission = result.recordset[0];
 
         context.res = {
             status: 200,
             headers: getCorsHeaders(),
             body: {
-                message: "MEDEVAC submission updated successfully",
-                submission: updatedSubmission
+                success: true,
+                submission: {
+                    id: submission.id,
+                    patientName: submission.patient_name,
+                    obligationNumber: submission.obligation_number,
+                    status: submission.status,
+                    updatedAt: submission.updated_at,
+                    ...JSON.parse(submission.form_data)
+                }
             }
         };
-
     } catch (error) {
         context.log.error('Error updating submission:', error);
         context.res = {
@@ -324,33 +320,29 @@ async function handleUpdate(context, req, id, containerClient) {
 }
 
 // Delete submission
-async function handleDelete(context, id, containerClient) {
+async function handleDelete(context, id, pool) {
     try {
-        const blobName = `medevac-submissions/${id}.json`;
-        const blobClient = containerClient.getBlockBlobClient(blobName);
-        
-        const exists = await blobClient.exists();
-        if (!exists) {
+        const result = await pool.request()
+            .input('id', sql.Int, parseInt(id))
+            .query('DELETE FROM medevac_submissions WHERE id = @id; SELECT @@ROWCOUNT as deleted');
+
+        if (result.recordset[0].deleted === 0) {
             context.res = {
                 status: 404,
                 headers: getCorsHeaders(),
-                body: { error: "MEDEVAC submission not found" }
+                body: { error: "Submission not found" }
             };
             return;
         }
 
-        // Delete the submission
-        await blobClient.delete();
-
-        // Update index
-        await updateSubmissionIndex(containerClient, { id }, 'delete');
-
         context.res = {
             status: 200,
             headers: getCorsHeaders(),
-            body: { message: "MEDEVAC submission deleted successfully" }
+            body: {
+                success: true,
+                message: "Submission deleted successfully"
+            }
         };
-
     } catch (error) {
         context.log.error('Error deleting submission:', error);
         context.res = {
@@ -361,94 +353,11 @@ async function handleDelete(context, id, containerClient) {
     }
 }
 
-// Helper functions
-function generateMedevacId() {
-    const timestamp = new Date().getTime();
-    const random = Math.floor(Math.random() * 1000);
-    return `MEDEVAC-${timestamp}-${random}`;
-}
-
 function getCorsHeaders() {
     return {
-        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Content-Type": "application/json"
     };
-}
-
-async function streamToString(readableStream) {
-    return new Promise((resolve, reject) => {
-        const chunks = [];
-        readableStream.on("data", (data) => {
-            chunks.push(data.toString());
-        });
-        readableStream.on("end", () => {
-            resolve(chunks.join(""));
-        });
-        readableStream.on("error", reject);
-    });
-}
-
-// Update submissions index for faster queries
-async function updateSubmissionIndex(containerClient, submission, operation) {
-    try {
-        const indexBlobClient = containerClient.getBlockBlobClient('medevac-submissions/index.json');
-        
-        let index = { submissions: [] };
-        
-        // Get existing index
-        const indexExists = await indexBlobClient.exists();
-        if (indexExists) {
-            const indexData = await streamToString((await indexBlobClient.download()).readableStreamBody);
-            index = JSON.parse(indexData);
-        }
-
-        // Update index based on operation
-        switch (operation) {
-            case 'create':
-                index.submissions.push({
-                    id: submission.id,
-                    patientName: submission.patientName,
-                    status: submission.status,
-                    createdAt: submission.createdAt,
-                    updatedAt: submission.updatedAt,
-                    obligationNumber: submission.obligationNumber
-                });
-                break;
-            case 'update':
-                const updateIndex = index.submissions.findIndex(s => s.id === submission.id);
-                if (updateIndex >= 0) {
-                    index.submissions[updateIndex] = {
-                        id: submission.id,
-                        patientName: submission.patientName,
-                        status: submission.status,
-                        createdAt: submission.createdAt,
-                        updatedAt: submission.updatedAt,
-                        obligationNumber: submission.obligationNumber
-                    };
-                }
-                break;
-            case 'delete':
-                index.submissions = index.submissions.filter(s => s.id !== submission.id);
-                break;
-        }
-
-        // Sort by creation date (newest first)
-        index.submissions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        index.lastUpdated = new Date().toISOString();
-
-        // Save updated index
-        await indexBlobClient.upload(
-            JSON.stringify(index, null, 2),
-            JSON.stringify(index, null, 2).length,
-            {
-                blobHTTPHeaders: { blobContentType: 'application/json' }
-            }
-        );
-
-    } catch (error) {
-        // Don't fail the main operation if index update fails
-        console.log('Warning: Failed to update index:', error);
-    }
 }

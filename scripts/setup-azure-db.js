@@ -80,30 +80,16 @@ async function setupDatabase() {
       IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='medevac_submissions' AND xtype='U')
       CREATE TABLE medevac_submissions (
         id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NOT NULL,
-        patient_name NVARCHAR(100) NOT NULL,
-        patient_rank NVARCHAR(50),
-        patient_unit NVARCHAR(100),
-        medical_condition NVARCHAR(500),
-        urgency_level NVARCHAR(20) DEFAULT 'routine',
+        patient_name NVARCHAR(100),
+        obligation_number NVARCHAR(50),
         origin_post NVARCHAR(100),
         destination_location NVARCHAR(100),
-        estimated_cost DECIMAL(10,2) DEFAULT 0,
-        per_diem_total DECIMAL(10,2) DEFAULT 0,
-        accommodation_cost DECIMAL(10,2) DEFAULT 0,
-        transportation_cost DECIMAL(10,2) DEFAULT 0,
-        medical_cost DECIMAL(10,2) DEFAULT 0,
+        medevac_type NVARCHAR(50),
         status NVARCHAR(20) DEFAULT 'draft',
-        funding_cable_in_date DATE,
-        funding_cable_sent_date DATE,
-        initial_funding_total DECIMAL(10,2) DEFAULT 0,
-        obligation_number NVARCHAR(50),
-        amendment_data NVARCHAR(MAX),
-        extensions_data NVARCHAR(MAX),
         form_data NVARCHAR(MAX),
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        created_by NVARCHAR(100),
+        created_at DATETIME2 DEFAULT GETUTCDATE(),
+        updated_at DATETIME2 DEFAULT GETUTCDATE()
       )
     `);
     console.log('✅ MEDEVAC submissions table ready');
@@ -133,12 +119,13 @@ async function setupDatabase() {
         first_name NVARCHAR(50) NOT NULL,
         last_name NVARCHAR(50) NOT NULL,
         email NVARCHAR(100) UNIQUE NOT NULL,
-        requested_username NVARCHAR(50) NOT NULL,
+        username NVARCHAR(50) NOT NULL,
         justification NVARCHAR(MAX),
         status NVARCHAR(20) DEFAULT 'pending',
-        created_at DATETIME2 DEFAULT GETDATE(),
+        created_at DATETIME2 DEFAULT GETUTCDATE(),
         reviewed_at DATETIME2,
-        reviewed_by NVARCHAR(50)
+        reviewed_by NVARCHAR(100),
+        notes NVARCHAR(MAX)
       )
     `);
     console.log('✅ User requests table ready');
