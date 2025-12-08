@@ -37,81 +37,9 @@ const initializeDatabase = async () => {
     console.log('📊 Database connection verified');
     
     console.log('✅ Azure SQL Database connected and ready');
-    return pool;
-    await pool.request().query(`
-      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
-      CREATE TABLE users (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        username NVARCHAR(50) UNIQUE NOT NULL,
-        email NVARCHAR(255) UNIQUE NOT NULL,
-        password_hash NVARCHAR(255) NOT NULL,
-        first_name NVARCHAR(100),
-        last_name NVARCHAR(100),
-        post NVARCHAR(255),
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE()
-      )
-    `);
-
-    await pool.request().query(`
-      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='medevac_submissions' AND xtype='U')
-      CREATE TABLE medevac_submissions (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NOT NULL,
-        patient_name NVARCHAR(255) NOT NULL,
-        patient_rank NVARCHAR(50),
-        patient_unit NVARCHAR(255),
-        medical_condition NVARCHAR(MAX),
-        urgency_level NVARCHAR(50) NOT NULL,
-        origin_post NVARCHAR(255) NOT NULL,
-        destination_location NVARCHAR(255) NOT NULL,
-        estimated_cost DECIMAL(10,2),
-        per_diem_total DECIMAL(10,2),
-        accommodation_cost DECIMAL(10,2),
-        transportation_cost DECIMAL(10,2),
-        medical_cost DECIMAL(10,2),
-        status NVARCHAR(50) DEFAULT 'draft',
-        funding_cable_in_date DATE,
-        funding_cable_sent_date DATE,
-        initial_funding_total DECIMAL(10,2),
-        obligation_number NVARCHAR(255),
-        amendment_data NVARCHAR(MAX), -- JSON field for amendment details
-        extensions_data NVARCHAR(MAX), -- JSON field for extensions
-        form_data NVARCHAR(MAX) NOT NULL, -- Complete form data as JSON
-        created_at DATETIME2 DEFAULT GETDATE(),
-        updated_at DATETIME2 DEFAULT GETDATE(),
-        FOREIGN KEY (user_id) REFERENCES users (id)
-      )
-    `);
-
-    await pool.request().query(`
-      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='user_sessions' AND xtype='U')
-      CREATE TABLE user_sessions (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NOT NULL,
-        session_token NVARCHAR(255) UNIQUE NOT NULL,
-        expires_at DATETIME2 NOT NULL,
-        created_at DATETIME2 DEFAULT GETDATE(),
-        FOREIGN KEY (user_id) REFERENCES users (id)
-      )
-    `);
-
-    await pool.request().query(`
-      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='activity_log' AND xtype='U')
-      CREATE TABLE activity_log (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        user_id INT NOT NULL,
-        action NVARCHAR(100) NOT NULL,
-        resource_type NVARCHAR(50),
-        resource_id INT,
-        details NVARCHAR(MAX),
-        ip_address NVARCHAR(50),
-        created_at DATETIME2 DEFAULT GETDATE(),
-        FOREIGN KEY (user_id) REFERENCES users (id)
-      )
-    `);
-
-    console.log('Azure SQL Database connected and tables initialized successfully');
+    
+    // Note: Table creation handled by scripts/setup-azure-db.js
+    // This ensures consistent schema across all environments
     return pool;
   } catch (error) {
     console.error('Database initialization failed:', error);

@@ -24,26 +24,8 @@ let pool = null;
 const getPool = async () => {
   if (!pool) {
     pool = await sql.connect(dbConfig);
-    // Create table if it doesn't exist
-    await pool.request().query(`
-      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='access_requests' AND xtype='U')
-      CREATE TABLE access_requests (
-        id INT IDENTITY(1,1) PRIMARY KEY,
-        request_id NVARCHAR(50) UNIQUE NOT NULL,
-        email NVARCHAR(255) NOT NULL,
-        full_name NVARCHAR(255) NOT NULL,
-        organization NVARCHAR(255),
-        reason NVARCHAR(MAX) NOT NULL,
-        requested_access NVARCHAR(255) NOT NULL,
-        status NVARCHAR(50) DEFAULT 'pending',
-        created_at DATETIME DEFAULT GETUTCDATE(),
-        reviewed_at DATETIME,
-        reviewed_by NVARCHAR(255),
-        approval_notes NVARCHAR(MAX),
-        ip_address NVARCHAR(50),
-        user_agent NVARCHAR(MAX)
-      )
-    `);
+    // Note: Use user_requests table (created by setup-azure-db.js)
+    // This matches the standardized schema
   }
   return pool;
 };
@@ -70,8 +52,8 @@ module.exports = async function (context, req) {
                 if (id) {
                     // Get specific request
                     const result = await pool.request()
-                        .input('requestId', sql.NVarChar(50), id)
-                        .query('SELECT * FROM access_requests WHERE request_id = @requestId');
+                        .input('requestId', sql.Int, parseInt(id))
+                        .query('SELECT * FROM user_requests WHERE id = @requestId');
                     
                     if (result.recordset.length === 0) {
                         context.res = {
@@ -90,7 +72,7 @@ module.exports = async function (context, req) {
                 } else {
                     // Get all requests (with optional status filter)
                     const status = req.query.status || null;
-                    let query = 'SELECT * FROM access_requests';
+                    let query = 'SELECT * FROM user_requests';
                     
                     if (status) {
                         query += ` WHERE status = '${status}'`;
@@ -114,43 +96,35 @@ module.exports = async function (context, req) {
 
             case 'POST':
                 // Submit new access request
-                const { email, fullName, organization, reason, requestedAccess } = req.body;
+                const { email, firstName, lastName, requestedUsername, justification } = req.body;
 
                 // Validate required fields
-                if (!email || !fullName || !reason || !requestedAccess) {
+                if (!email || !firstName || !lastName || !requestedUsername) {
                     context.res = {
                         status: 400,
                         headers: getCorsHeaders(),
                         body: { 
                             error: "Missing required fields",
-                            required: ["email", "fullName", "reason", "requestedAccess"]
+                            required: ["email", "firstName", "lastName", "requestedUsername"]
                         }
                     };
                     return;
                 }
 
-                // Generate unique request ID
-                const requestId = `ARQ-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-                // Insert into database
+                // Insert into database (user_requests table)
                 const insertResult = await pool.request()
-                    .input('request_id', sql.NVarChar(50), requestId)
-                    .input('email', sql.NVarChar(255), email)
-                    .input('full_name', sql.NVarChar(255), fullName)
-                    .input('organization', sql.NVarChar(255), organization || null)
-                    .input('reason', sql.NVarChar(sql.MAX), reason)
-                    .input('requested_access', sql.NVarChar(255), requestedAccess)
-                    .input('ip_address', sql.NVarChar(50), getClientIp(req) || null)
-                    .input('user_agent', sql.NVarChar(sql.MAX), req.headers['user-agent'] || null)
+                    .input('email', sql.NVarChar(100), email)
+                    .input('first_name', sql.NVarChar(50), firstName)
+                    .input('last_name', sql.NVarChar(50), lastName)
+                    .input('requested_username', sql.NVarChar(50), requestedUsername)
+                    .input('justification', sql.NVarChar(sql.MAX), justification || null)
                     .query(`
-                        INSERT INTO access_requests 
-                        (request_id, email, full_name, organization, reason, requested_access, ip_address, user_agent)
+                        INSERT INTO user_requests 
+                        (email, first_name, last_name, requested_username, justification)
+                        OUTPUT INSERTED.id, INSERTED.email, INSERTED.first_name, INSERTED.last_name, 
+                               INSERTED.requested_username, INSERTED.status, INSERTED.created_at
                         VALUES 
-                        (@request_id, @email, @full_name, @organization, @reason, @requested_access, @ip_address, @user_agent)
-                        
-                        SELECT id, request_id, email, full_name, status, created_at 
-                        FROM access_requests 
-                        WHERE request_id = @request_id
+                        (@email, @first_name, @last_name, @requested_username, @justification)
                     `);
 
                 context.res = {

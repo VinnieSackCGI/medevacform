@@ -53,10 +53,20 @@ coverage/
 
 # Azure CLI installer
 AzureCLI.msi
+*.msi
 
 # Local development files
 PowerPrompt.txt
 convert-excel.ps1
+*-summary.js
+test-deployment.js
+validate-api.js
+
+# Backup and example files
+*.backup.*
+*.simple.*
+Examples/
+deployment/
 
 # Azure Functions
 bin/
@@ -65,3 +75,6 @@ obj/
 
 # Static Web App CLI
 .swa/
+
+# Documentation archives
+docs/archive/
