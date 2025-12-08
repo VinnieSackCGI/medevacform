@@ -105,22 +105,57 @@ async function handleCreate(context, req, pool) {
         const status = formData.status || 'pending';
         const createdBy = formData.createdBy || formData.created_by || 'system';
         
-        // Insert into database
-        const result = await pool.request()
-            .input('patient_name', sql.NVarChar(100), patientName)
-            .input('obligation_number', sql.NVarChar(50), obligationNumber)
-            .input('origin_post', sql.NVarChar(100), originPost)
-            .input('destination_location', sql.NVarChar(100), destinationLocation)
-            .input('medevac_type', sql.NVarChar(50), medevacType)
-            .input('status', sql.NVarChar(20), status)
-            .input('form_data', sql.NVarChar(sql.MAX), JSON.stringify(formData))
-            .input('created_by', sql.NVarChar(100), createdBy)
-            .query(`
-                INSERT INTO medevac_submissions 
-                (patient_name, obligation_number, origin_post, destination_location, medevac_type, status, form_data, created_by, created_at, updated_at)
-                OUTPUT INSERTED.*
-                VALUES (@patient_name, @obligation_number, @origin_post, @destination_location, @medevac_type, @status, @form_data, @created_by, GETUTCDATE(), GETUTCDATE())
-            `);
+        // Check which columns exist in the table
+        const columnsResult = await pool.request().query(`
+            SELECT COLUMN_NAME 
+            FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_NAME = 'medevac_submissions'
+        `);
+        
+        const existingColumns = columnsResult.recordset.map(row => row.COLUMN_NAME.toLowerCase());
+        
+        // Build dynamic insert based on existing columns
+        const columnMap = {
+            'patient_name': { value: patientName, type: sql.NVarChar(100) },
+            'obligation_number': { value: obligationNumber, type: sql.NVarChar(50) },
+            'origin_post': { value: originPost, type: sql.NVarChar(100) },
+            'destination_location': { value: destinationLocation, type: sql.NVarChar(100) },
+            'medevac_type': { value: medevacType, type: sql.NVarChar(50) },
+            'status': { value: status, type: sql.NVarChar(20) },
+            'form_data': { value: JSON.stringify(formData), type: sql.NVarChar(sql.MAX) },
+            'created_by': { value: createdBy, type: sql.NVarChar(100) },
+            'created_at': { value: undefined, type: null }, // Use default
+            'updated_at': { value: undefined, type: null }  // Use default
+        };
+        
+        const request = pool.request();
+        const columns = [];
+        const values = [];
+        const params = [];
+        
+        for (const [colName, colData] of Object.entries(columnMap)) {
+            if (existingColumns.includes(colName)) {
+                columns.push(colName);
+                if (colName === 'created_at' || colName === 'updated_at') {
+                    values.push('GETUTCDATE()');
+                } else {
+                    params.push(colName);
+                    values.push(`@${colName}`);
+                    request.input(colName, colData.type, colData.value);
+                }
+            }
+        }
+        
+        const insertQuery = `
+            INSERT INTO medevac_submissions (${columns.join(', ')})
+            OUTPUT INSERTED.*
+            VALUES (${values.join(', ')})
+        `;
+        
+        context.log('Insert query:', insertQuery);
+        context.log('Columns:', columns);
+        
+        const result = await request.query(insertQuery);
 
         const submission = result.recordset[0];
         

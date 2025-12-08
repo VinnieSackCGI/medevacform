@@ -85,7 +85,7 @@ async function setupDatabase() {
         origin_post NVARCHAR(100),
         destination_location NVARCHAR(100),
         medevac_type NVARCHAR(50),
-        status NVARCHAR(20) DEFAULT 'draft',
+        status NVARCHAR(20) DEFAULT 'pending',
         form_data NVARCHAR(MAX),
         created_by NVARCHAR(100),
         created_at DATETIME2 DEFAULT GETUTCDATE(),
@@ -93,16 +93,31 @@ async function setupDatabase() {
       )
     `);
     
-    // Add created_by column if it doesn't exist (for existing tables)
-    await pool.request().query(`
-      IF NOT EXISTS (
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_NAME = 'medevac_submissions' AND COLUMN_NAME = 'created_by'
-      )
-      BEGIN
-        ALTER TABLE medevac_submissions ADD created_by NVARCHAR(100)
-      END
-    `);
+    // Migrations: Add columns if they don't exist (for existing tables)
+    const medevacColumns = [
+      { name: 'created_by', type: 'NVARCHAR(100)' },
+      { name: 'patient_name', type: 'NVARCHAR(100)' },
+      { name: 'obligation_number', type: 'NVARCHAR(50)' },
+      { name: 'origin_post', type: 'NVARCHAR(100)' },
+      { name: 'destination_location', type: 'NVARCHAR(100)' },
+      { name: 'medevac_type', type: 'NVARCHAR(50)' },
+      { name: 'status', type: 'NVARCHAR(20)', default: "'pending'" },
+      { name: 'form_data', type: 'NVARCHAR(MAX)' },
+      { name: 'created_at', type: 'DATETIME2', default: 'GETUTCDATE()' },
+      { name: 'updated_at', type: 'DATETIME2', default: 'GETUTCDATE()' }
+    ];
+    
+    for (const column of medevacColumns) {
+      await pool.request().query(`
+        IF NOT EXISTS (
+          SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+          WHERE TABLE_NAME = 'medevac_submissions' AND COLUMN_NAME = '${column.name}'
+        )
+        BEGIN
+          ALTER TABLE medevac_submissions ADD ${column.name} ${column.type} ${column.default ? `DEFAULT ${column.default}` : ''}
+        END
+      `);
+    }
     
     console.log('✅ MEDEVAC submissions table ready');
 
