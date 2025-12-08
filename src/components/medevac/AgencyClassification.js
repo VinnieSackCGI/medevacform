@@ -64,7 +64,7 @@ const AgencyClassification = ({ formData, setFormData }) => {
             <Label htmlFor="agencyType" className="text-black-pearl font-medium">
               Agency Type *
             </Label>
-            <Select onValueChange={(value) => handleSelectChange('agencyType', value)}>
+            <Select value={formData.agencyType} onValueChange={(value) => handleSelectChange('agencyType', value)}>
               <SelectTrigger className="border-gray-300 focus:border-matisse focus:ring-matisse">
                 <SelectValue placeholder="Select agency" />
               </SelectTrigger>
@@ -84,7 +84,7 @@ const AgencyClassification = ({ formData, setFormData }) => {
             <Label htmlFor="medevacType" className="text-black-pearl font-medium">
               MEDEVAC Type *
             </Label>
-            <Select onValueChange={(value) => handleSelectChange('medevacType', value)}>
+            <Select value={formData.medevacType} onValueChange={(value) => handleSelectChange('medevacType', value)}>
               <SelectTrigger className="border-gray-300 focus:border-matisse focus:ring-matisse">
                 <SelectValue placeholder="Select MEDEVAC type" />
               </SelectTrigger>
@@ -104,7 +104,7 @@ const AgencyClassification = ({ formData, setFormData }) => {
             <Label htmlFor="travelerType" className="text-black-pearl font-medium">
               Traveler Type *
             </Label>
-            <Select onValueChange={(value) => handleSelectChange('travelerType', value)}>
+            <Select value={formData.travelerType} onValueChange={(value) => handleSelectChange('travelerType', value)}>
               <SelectTrigger className="border-gray-300 focus:border-matisse focus:ring-matisse">
                 <SelectValue placeholder="Select traveler type" />
               </SelectTrigger>
@@ -122,7 +122,7 @@ const AgencyClassification = ({ formData, setFormData }) => {
             <Label htmlFor="route" className="text-black-pearl font-medium">
               Route *
             </Label>
-            <Select onValueChange={(value) => handleSelectChange('route', value)}>
+            <Select value={formData.route} onValueChange={(value) => handleSelectChange('route', value)}>
               <SelectTrigger className="border-gray-300 focus:border-matisse focus:ring-matisse">
                 <SelectValue placeholder="Select route type" />
               </SelectTrigger>
