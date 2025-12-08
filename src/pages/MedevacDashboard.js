@@ -174,8 +174,9 @@ const MedevacDashboard = () => {
     const loadMedevacs = async () => {
       try {
         setLoading(true);
-        const service = new MedevacService();
-        const response = await service.getAllSubmissions();
+        const response = await MedevacService.getAllSubmissions();
+        
+        console.log('API Response:', response);
         
         // Transform API data to match dashboard format
         const transformedData = (response.submissions || []).map(sub => ({
@@ -195,6 +196,8 @@ const MedevacDashboard = () => {
           numberOfTravelers: 1,
           costPerTraveler: sub.totalObligation || 0
         }));
+        
+        console.log('Transformed data:', transformedData);
         
         setMedevacData(transformedData);
         setFilteredData(transformedData);

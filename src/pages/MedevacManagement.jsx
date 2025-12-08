@@ -35,9 +35,8 @@ const MedevacManagement = () => {
     try {
       setLoading(true);
       setError(null);
-      const service = new MedevacService();
       const options = statusFilter !== 'all' ? { status: statusFilter } : {};
-      const data = await service.getAllSubmissions(options);
+      const data = await MedevacService.getAllSubmissions(options);
       console.log('Loaded submissions:', data);
       setSubmissions(data.submissions || []);
     } catch (err) {
