@@ -123,8 +123,21 @@ export const useMEDEVACForm = () => {
     try {
       const MedevacService = (await import('../services/MedevacService')).default;
       
+      // Get current user from localStorage
+      const savedUser = localStorage.getItem('medevac_user');
+      let userId = null;
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          userId = user.id;
+        } catch (e) {
+          console.error('Error parsing user:', e);
+        }
+      }
+      
       const medevacData = {
         ...mergedFormData,
+        userId: userId,
         status: isDraft ? 'draft' : 'submitted',
         savedAt: new Date().toISOString()
       };

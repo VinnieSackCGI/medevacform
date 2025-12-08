@@ -104,6 +104,7 @@ async function handleCreate(context, req, pool) {
         const medevacType = formData.medevacType || formData.medevac_type || null;
         const status = formData.status || 'pending';
         const createdBy = formData.createdBy || formData.created_by || 'system';
+        const userId = formData.userId || formData.user_id || null;
         
         // Check which columns exist in the table
         const columnsResult = await pool.request().query(`
@@ -124,6 +125,7 @@ async function handleCreate(context, req, pool) {
             'status': { value: status, type: sql.NVarChar(20) },
             'form_data': { value: JSON.stringify(formData), type: sql.NVarChar(sql.MAX) },
             'created_by': { value: createdBy, type: sql.NVarChar(100) },
+            'user_id': { value: userId, type: sql.Int },
             'created_at': { value: undefined, type: null }, // Use default
             'updated_at': { value: undefined, type: null }  // Use default
         };

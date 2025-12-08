@@ -93,6 +93,17 @@ async function setupDatabase() {
       )
     `);
     
+    // Make user_id nullable if it exists (from old schema)
+    await pool.request().query(`
+      IF EXISTS (
+        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_NAME = 'medevac_submissions' AND COLUMN_NAME = 'user_id' AND IS_NULLABLE = 'NO'
+      )
+      BEGIN
+        ALTER TABLE medevac_submissions ALTER COLUMN user_id INT NULL
+      END
+    `);
+    
     // Migrations: Add columns if they don't exist (for existing tables)
     const medevacColumns = [
       { name: 'created_by', type: 'NVARCHAR(100)' },
@@ -104,7 +115,8 @@ async function setupDatabase() {
       { name: 'status', type: 'NVARCHAR(20)', default: "'pending'" },
       { name: 'form_data', type: 'NVARCHAR(MAX)' },
       { name: 'created_at', type: 'DATETIME2', default: 'GETUTCDATE()' },
-      { name: 'updated_at', type: 'DATETIME2', default: 'GETUTCDATE()' }
+      { name: 'updated_at', type: 'DATETIME2', default: 'GETUTCDATE()' },
+      { name: 'user_id', type: 'INT' }
     ];
     
     for (const column of medevacColumns) {
