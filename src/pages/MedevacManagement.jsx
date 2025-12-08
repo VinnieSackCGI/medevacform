@@ -29,14 +29,16 @@ const MedevacManagement = () => {
 
   useEffect(() => {
     loadSubmissions();
-  }, [loadSubmissions]);
+  }, [statusFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadSubmissions = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
+      const service = new MedevacService();
       const options = statusFilter !== 'all' ? { status: statusFilter } : {};
-      const data = await MedevacService.getAllSubmissions(options);
+      const data = await service.getAllSubmissions(options);
+      console.log('Loaded submissions:', data);
       setSubmissions(data.submissions || []);
     } catch (err) {
       setError('Failed to load MEDEVAC submissions: ' + err.message);
