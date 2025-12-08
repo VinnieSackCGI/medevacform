@@ -28,6 +28,7 @@ export default function Navigation() {
     { path: '/', label: 'Home', icon: HomeIcon, requiresAuth: false },
     { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon, requiresAuth: true },
     { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon, requiresAuth: true },
+    { path: '/admin/requests', label: 'Access Requests', icon: ShieldCheckIcon, requiresAuth: true },
     { path: '/dashboard', label: 'Analytics', icon: ChartBarIcon, requiresAuth: true },
     { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon, requiresAuth: true },
     { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon, requiresAuth: true },
