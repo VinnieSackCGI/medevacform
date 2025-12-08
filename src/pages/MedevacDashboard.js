@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import MedevacWorldMap from "../components/MedevacWorldMap";
+import MedevacService from "../services/MedevacService";
+import { useAuth } from "../contexts/AuthContext";
 import { 
   BarChart3, 
   Globe, 
@@ -159,10 +161,55 @@ const mockMedevacData = [
 ];
 
 const MedevacDashboard = () => {
+  const { user } = useAuth();
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [selectedTimeframe, setSelectedTimeframe] = useState("2024");
-  const [filteredData, setFilteredData] = useState(mockMedevacData);
+  const [filteredData, setFilteredData] = useState([]);
+  const [medevacData, setMedevacData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Load real MEDEVAC data from API
+  useEffect(() => {
+    const loadMedevacs = async () => {
+      try {
+        setLoading(true);
+        const service = new MedevacService();
+        const response = await service.getAllSubmissions();
+        
+        // Transform API data to match dashboard format
+        const transformedData = (response.submissions || []).map(sub => ({
+          id: sub.obligationNumber || sub.id,
+          patientName: sub.patientName || 'Unnamed Patient',
+          agencyType: sub.agencyType || 'N/A',
+          region: sub.region || 'N/A',
+          homePost: sub.homePost || '',
+          medevacLocation: sub.initialMedevacLocation || sub.currentMedevacLocation || '',
+          route: sub.route || 'N/A',
+          travelerType: sub.travelerType || 'N/A',
+          totalObligation: sub.totalObligation || 0,
+          status: sub.status || 'Pending',
+          startDate: sub.initialStartDate || sub.createdAt,
+          endDate: sub.initialEndDate || '',
+          caseType: sub.medevacType || 'MEDICAL',
+          numberOfTravelers: 1,
+          costPerTraveler: sub.totalObligation || 0
+        }));
+        
+        setMedevacData(transformedData);
+        setFilteredData(transformedData);
+      } catch (error) {
+        console.error('Error loading MEDEVACs:', error);
+        // Fallback to mock data on error
+        setMedevacData(mockMedevacData);
+        setFilteredData(mockMedevacData);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadMedevacs();
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -246,12 +293,12 @@ const MedevacDashboard = () => {
 
   // Filter data based on selections
   useEffect(() => {
-    let filtered = mockMedevacData;
+    let filtered = medevacData;
     if (selectedRegion !== "All") {
       filtered = filtered.filter(item => item.region === selectedRegion);
     }
     setFilteredData(filtered);
-  }, [selectedRegion, selectedTimeframe]);
+  }, [selectedRegion, selectedTimeframe, medevacData]);
 
   return (
     <div className="min-h-screen bg-background p-4">

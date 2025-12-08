@@ -9,19 +9,20 @@ import {
   GlobeAmericasIcon, 
   CurrencyDollarIcon, 
   BookOpenIcon,
-  FolderIcon,
   Bars3Icon,
   XMarkIcon,
   ShieldCheckIcon,
   ChartPieIcon,
   UserIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
 import MedFlagLogo from "../assets/images/logos/med-flag-logo-horizontal-white.svg";
 
 export default function Navigation() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
 
   const allNavItems = [
@@ -31,9 +32,12 @@ export default function Navigation() {
     { path: '/admin/requests', label: 'Access Requests', icon: ShieldCheckIcon, requiresAuth: true },
     { path: '/dashboard', label: 'Analytics', icon: ChartBarIcon, requiresAuth: true },
     { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon, requiresAuth: true },
-    { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon, requiresAuth: true },
-    { path: '/instructions', label: 'Instructions', icon: BookOpenIcon, requiresAuth: true },
-    { path: '/documentation', label: 'Documentation', icon: FolderIcon, requiresAuth: true }
+    { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon, requiresAuth: true }
+  ];
+
+  const helpMenuItems = [
+    { path: '/instructions', label: 'Instructions', icon: BookOpenIcon },
+    { path: '/documentation', label: 'Documentation', icon: BookOpenIcon }
   ];
 
   const navItems = allNavItems.filter(item => {
@@ -118,6 +122,55 @@ export default function Navigation() {
                   </Link>
                 );
               })}
+              
+              {/* Help & Resources Dropdown */}
+              {isAuthenticated && (
+                <div className="relative">
+                  <button
+                    onClick={() => setIsHelpMenuOpen(!isHelpMenuOpen)}
+                    onBlur={() => setTimeout(() => setIsHelpMenuOpen(false), 200)}
+                    className={`
+                      group relative flex items-center space-x-3 px-5 py-4 text-sm font-semibold transition-all duration-300
+                      ${(location.pathname === '/instructions' || location.pathname === '/documentation')
+                        ? 'text-theme-text-primary bg-theme-bg-secondary' 
+                        : 'text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-bg-secondary'
+                      }
+                    `}
+                  >
+                    {(location.pathname === '/instructions' || location.pathname === '/documentation') && (
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-matisse"></div>
+                    )}
+                    
+                    <BookOpenIcon className={`
+                      w-5 h-5 transition-colors duration-300
+                      ${(location.pathname === '/instructions' || location.pathname === '/documentation')
+                        ? 'text-matisse' 
+                        : 'text-gray-400 group-hover:text-matisse'
+                      }
+                    `} />
+                    
+                    <span className="font-open-sans">Help & Resources</span>
+                    <ChevronDownIcon className={`w-4 h-4 transition-transform duration-200 ${isHelpMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  
+                  {/* Dropdown Menu */}
+                  {isHelpMenuOpen && (
+                    <div className="absolute left-0 mt-0 w-56 bg-theme-bg-primary border border-theme-border-primary shadow-lg rounded-b-lg overflow-hidden z-50">
+                      {helpMenuItems.map((item) => (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          className="flex items-center space-x-3 px-4 py-3 text-sm text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-bg-secondary transition-colors"
+                          onClick={() => setIsHelpMenuOpen(false)}
+                        >
+                          <item.icon className="w-4 h-4" />
+                          <span>{item.label}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </nav>
 
             {/* Desktop User Menu */}
@@ -161,7 +214,7 @@ export default function Navigation() {
         {/* Mobile Navigation Menu */}
         <div className={`md:hidden transition-all duration-300 ease-out ${
           isMobileMenuOpen 
-            ? 'max-h-96 opacity-100' 
+            ? 'max-h-[32rem] opacity-100' 
             : 'max-h-0 opacity-0 overflow-hidden'
         }`}>
           <div className="px-4 py-3 space-y-1 bg-gray-50 border-t border-gray-200">
@@ -193,6 +246,40 @@ export default function Navigation() {
                 </Link>
               );
             })}
+            
+            {/* Help & Resources Section for Mobile */}
+            {isAuthenticated && (
+              <div className="pt-2 border-t border-gray-200">
+                <div className="text-xs font-semibold text-gray-500 px-4 py-2">Help & Resources</div>
+                {helpMenuItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`
+                        group flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200
+                        ${isActive 
+                          ? 'bg-matisse text-white shadow-sm' 
+                          : 'text-gray-600 hover:bg-white hover:text-black-pearl'
+                        }
+                      `}
+                    >
+                      <item.icon className={`
+                        w-5 h-5
+                        ${isActive 
+                          ? 'text-white' 
+                          : 'text-gray-400 group-hover:text-matisse'
+                        }
+                      `} />
+                      <span className="font-open-sans">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
