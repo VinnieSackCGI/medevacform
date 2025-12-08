@@ -36,7 +36,12 @@ export default function Navigation() {
     { path: '/documentation', label: 'Documentation', icon: FolderIcon, requiresAuth: true }
   ];
 
-  const navItems = allNavItems.filter(item => !item.requiresAuth || isAuthenticated);
+  const navItems = allNavItems.filter(item => {
+    // Hide Home when logged in
+    if (item.path === '/' && isAuthenticated) return false;
+    // Show items that don't require auth, or user is authenticated
+    return !item.requiresAuth || isAuthenticated;
+  });
 
   return (
     <>

@@ -24,12 +24,11 @@ const ExtensionForm = memo(({ extension, onUpdate, onRemove, extensionNumber }) 
   const handleInputChange = useCallback((field, value) => {
     const updatedExtension = {
       ...extension,
-      [field]: value,
-      extensionFundingTotal: extensionTotal
+      [field]: value
     };
     
     onUpdate(updatedExtension);
-  }, [extension, extensionTotal, onUpdate]);
+  }, [extension, onUpdate]);
 
   const handleAddPerDiem = () => {
     const updatedExtension = { ...extension };
@@ -379,6 +378,16 @@ const ExtensionsSection = memo(({ formData, setFormData }) => {
 
   const updateExtension = useCallback((index, updatedExtension) => {
     const updatedExtensions = [...extensions];
+    
+    // Recalculate the extension's total before storing
+    const airfare = parseFloat(updatedExtension.airfare) || 0;
+    const additionalTravelers = parseFloat(updatedExtension.totalPerDiemAdditionalTravelers) || 0;
+    const additionalAmount = parseFloat(updatedExtension.additionalPerDiemAmount) || 0;
+    const perDiemTotal = (updatedExtension.perDiems || []).reduce((total, perDiem) => {
+      return total + ((parseFloat(perDiem.rate) || 0) * (parseInt(perDiem.days) || 0));
+    }, 0);
+    
+    updatedExtension.extensionFundingTotal = perDiemTotal + airfare + additionalTravelers + additionalAmount;
     updatedExtensions[index] = updatedExtension;
     
     // Calculate total obligation including all extensions
