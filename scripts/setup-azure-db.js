@@ -92,6 +92,18 @@ async function setupDatabase() {
         updated_at DATETIME2 DEFAULT GETUTCDATE()
       )
     `);
+    
+    // Add created_by column if it doesn't exist (for existing tables)
+    await pool.request().query(`
+      IF NOT EXISTS (
+        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_NAME = 'medevac_submissions' AND COLUMN_NAME = 'created_by'
+      )
+      BEGIN
+        ALTER TABLE medevac_submissions ADD created_by NVARCHAR(100)
+      END
+    `);
+    
     console.log('✅ MEDEVAC submissions table ready');
 
     // Activity log table
