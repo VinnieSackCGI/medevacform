@@ -111,7 +111,7 @@ module.exports = async function (context, req) {
             return;
         }
 
-        // Update the request
+        // Update the request status
         const updateResult = await pool.request()
             .input('requestId', sql.Int, requestId)
             .input('status', sql.NVarChar(50), action === 'approve' ? 'approved' : 'rejected')
@@ -131,15 +131,46 @@ module.exports = async function (context, req) {
 
         const updatedRequest = updateResult.recordset[0];
 
+        // If approving, create the user account
+        if (action === 'approve') {
+            const bcrypt = require('bcrypt');
+            const defaultPassword = 'YourPassword123!';
+            const passwordHash = await bcrypt.hash(defaultPassword, 10);
+
+            // Check if user already exists
+            const userCheck = await pool.request()
+                .input('username', sql.NVarChar(50), updatedRequest.username)
+                .input('email', sql.NVarChar(100), updatedRequest.email)
+                .query('SELECT id FROM users WHERE username = @username OR email = @email');
+
+            if (userCheck.recordset.length === 0) {
+                // Create user account
+                await pool.request()
+                    .input('username', sql.NVarChar(50), updatedRequest.username)
+                    .input('email', sql.NVarChar(100), updatedRequest.email)
+                    .input('passwordHash', sql.NVarChar(255), passwordHash)
+                    .input('firstName', sql.NVarChar(50), updatedRequest.first_name)
+                    .input('lastName', sql.NVarChar(50), updatedRequest.last_name)
+                    .input('role', sql.NVarChar(20), 'user')
+                    .query(`
+                        INSERT INTO users (username, email, password_hash, first_name, last_name, role, created_at)
+                        VALUES (@username, @email, @passwordHash, @firstName, @lastName, @role, GETUTCDATE())
+                    `);
+            }
+        }
+
         context.res = {
             status: 200,
             headers: getCorsHeaders(),
             body: {
                 success: true,
-                message: `Access request ${action}ed successfully`,
+                message: action === 'approve' 
+                    ? `Access request approved and user account created. Default password: YourPassword123!`
+                    : `Access request ${action}ed successfully`,
                 data: {
                     requestId: updatedRequest.id,
                     email: updatedRequest.email,
+                    username: updatedRequest.username,
                     fullName: `${updatedRequest.first_name} ${updatedRequest.last_name}`,
                     status: updatedRequest.status,
                     reviewedBy: updatedRequest.reviewed_by,
