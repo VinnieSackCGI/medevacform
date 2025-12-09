@@ -22,7 +22,7 @@ const documentFiles = {
 
 async function listDocuments() {
   const documents = [];
-  const basePath = path.join(__dirname, '../../docs');
+  const basePath = path.join(__dirname, '../docs-content');
   
   for (const [id, fileInfo] of Object.entries(documentFiles)) {
     const filePath = path.join(basePath, fileInfo.folder, fileInfo.file);
@@ -59,7 +59,7 @@ async function getDocument(id, rawMode = false) {
     throw new Error('Document not found');
   }
   
-  const basePath = path.join(__dirname, '../../docs');
+  const basePath = path.join(__dirname, '../docs-content');
   const filePath = path.join(basePath, fileInfo.folder, fileInfo.file);
   
   const content = await fs.readFile(filePath, 'utf8');
