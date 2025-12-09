@@ -3,7 +3,7 @@
 
 ### Executive Overview
 
-The MEDEVAC (Medical Evacuation) Application is a comprehensive full-stack web application developed for the U.S. Department of State's Medical Services division to manage and track medical evacuation cases worldwide. This application was built in **one week** using AI-assisted development with **Claude Sonnet 4.5** (GitHub Copilot), demonstrating a **87.5% reduction in development time** compared to traditional manual development approaches.
+The MEDEVAC (Medical Evacuation) Application is a comprehensive full-stack web application developed for the U.S. Department of State's Medical Services division to manage and track medical evacuation cases worldwide. This application was built in one week using AI-assisted development with Claude Sonnet 4.5 (GitHub Copilot), demonstrating an 87.5% reduction in development time compared to traditional manual development approaches.
 
 ---
 
@@ -102,32 +102,32 @@ While AI accelerated development significantly, this project would not have been
 | Authentication System | 3 days | 4 hours | 83% |
 | Azure Deployment & Config | 1 week | 6 hours | 89% |
 | Testing & Bug Fixes | 1 week | 1 day | 86% |
-| **Total Development Time** | **8 weeks** | **1 week** | **87.5%** |
+| Total Development Time | 8 weeks | 1 week | 87.5% |
 
 ### Cost Analysis
 
-**Traditional Development (8 weeks):**
+Traditional Development (8 weeks):
 - Senior Full-Stack Developer: \$120/hr × 320 hours = \$38,400
 - DevOps Engineer: \$100/hr × 40 hours = \$4,000
 - Database Administrator: \$110/hr × 40 hours = \$4,400
-- **Total Labor Cost**: **\$46,800**
+- Total Labor Cost: \$46,800
 
-**AI-Assisted Development (1 week):**
+AI-Assisted Development (1 week):
 - Developer + Claude Sonnet 4.5: \$120/hr × 40 hours = \$4,800
 - GitHub Copilot License: \$39/month = \$39
-- **Total Labor Cost**: **\$4,839**
+- Total Labor Cost: \$4,839
 
-**Cost Savings**: **\$41,961 (89.7% reduction)**
+Cost Savings: \$41,961 (89.7% reduction)
 
 ### Productivity Metrics
 
-- **Lines of Code Generated**: ~15,000+
-- **Components Created**: 45+ React components
-- **API Endpoints**: 12 Azure Functions
-- **Database Tables**: 5 relational tables
-- **Code Quality**: Production-ready with error handling and validation
-- **First-Time Success Rate**: ~85% of generated code worked without modification
-- **Iteration Cycles**: Average 2-3 refinements per feature
+- Lines of Code Generated: ~15,000+
+- Components Created: 45+ React components
+- API Endpoints: 12 Azure Functions
+- Database Tables: 5 relational tables
+- Code Quality: Production-ready with error handling and validation
+- First-Time Success Rate: ~85% of generated code worked without modification
+- Iteration Cycles: Average 2-3 refinements per feature
 
 ---
 
@@ -532,42 +532,42 @@ Claude then generated the scraper implementation that:
 
 The MEDEVAC Application demonstrates the transformative potential of AI-assisted development when paired with an experienced software engineer. By leveraging the 80/20 partnership between Claude Sonnet 4.5 and skilled human oversight, we achieved remarkable results:
 
-**Quantifiable Outcomes:**
-- **87.5% reduction in development time** (8 weeks → 1 week)
-- **89.7% cost savings** (\$46,800 → \$4,839)
-- **Production-ready code** with comprehensive security, performance optimization, and architectural best practices
-- **Complete Azure cloud deployment** with automated CI/CD pipelines
-- **Comprehensive feature set** exceeding initial MVP requirements
+Quantifiable Outcomes:
+- 87.5% reduction in development time (8 weeks → 1 week)
+- 89.7% cost savings (\$46,800 → \$4,839)
+- Production-ready code with comprehensive security, performance optimization, and architectural best practices
+- Complete Azure cloud deployment with automated CI/CD pipelines
+- Comprehensive feature set exceeding initial MVP requirements
 
-**The Critical Human Element:**
+The Critical Human Element:
 
 This project would not have been possible without deep human involvement:
-- **Strategic Vision**: Defining the application's purpose, scope, and success criteria
-- **Domain Expertise**: Understanding State Department workflows, MEDEVAC processes, and regulatory requirements
-- **Quality Assurance**: Rigorous testing, edge case identification, and user acceptance validation
-- **Problem Diagnosis**: Analyzing errors, interpreting logs, and teaching AI about complex systems (like the per diem scraper)
-- **Architectural Decisions**: Choosing technologies, designing database schemas, and planning for scalability
-- **User Experience**: Evaluating interfaces, ensuring accessibility, and making design judgments
+- Strategic Vision: Defining the application's purpose, scope, and success criteria
+- Domain Expertise: Understanding State Department workflows, MEDEVAC processes, and regulatory requirements
+- Quality Assurance: Rigorous testing, edge case identification, and user acceptance validation
+- Problem Diagnosis: Analyzing errors, interpreting logs, and teaching AI about complex systems (like the per diem scraper)
+- Architectural Decisions: Choosing technologies, designing database schemas, and planning for scalability
+- User Experience: Evaluating interfaces, ensuring accessibility, and making design judgments
 
 ### Key Takeaways
 
-**AI Amplifies, Doesn't Replace:**
+AI Amplifies, Doesn't Replace:
 - AI handled 80% of the coding work - generating components, API endpoints, database queries, and infrastructure configuration
 - The developer focused on the critical 20% - business logic validation, quality assurance, complex problem-solving, and strategic decisions
 - This partnership multiplied developer productivity by approximately 8x compared to manual coding
 
-**Experience Matters:**
+Experience Matters:
 - Effective AI-assisted development requires a skilled software engineer who can guide the AI, validate outputs, and handle complex challenges
 - AI tools like Claude Sonnet 4.5 are not yet accessible for everyday users without technical backgrounds
 - The developer's ability to decompose problems, write effective prompts, and critically evaluate AI outputs was essential to success
 
-**The Future of Development:**
+The Future of Development:
 - AI-assisted development represents a fundamental shift in how software is built
 - Developers become orchestrators and quality gatekeepers rather than typing every line of code
 - The bottleneck shifts from coding speed to requirements clarity and quality assurance
 - Teams can deliver enterprise-grade applications faster while maintaining professional standards
 
-**Final Reflection:**
+Final Reflection:
 
 This project proves that the future of software development is neither "AI replaces developers" nor "developers ignore AI" - it's a symbiotic partnership where human expertise guides AI capabilities to achieve results impossible with either alone. The developer provides the critical thinking, domain knowledge, and quality assurance that AI cannot yet replicate, while AI provides the speed, consistency, and best-practice knowledge that accelerates delivery.
 
