@@ -17,7 +17,7 @@ const LoginPage = () => {
 
   // Redirect if already logged in
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/management" replace />;
   }
 
   const handleSubmit = async (e) => {
