@@ -29,7 +29,6 @@ export default function Navigation() {
     { path: '/', label: 'Home', icon: HomeIcon, requiresAuth: false },
     { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon, requiresAuth: true },
     { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon, requiresAuth: true },
-    { path: '/admin/requests', label: 'Access Requests', icon: ShieldCheckIcon, requiresAuth: true },
     { path: '/analytics', label: 'Analytics', icon: ChartBarIcon, requiresAuth: true },
     { path: '/post-data', label: 'Post Data', icon: GlobeAmericasIcon, requiresAuth: true },
     { path: '/scraper', label: 'Per Diem Scraper', icon: CurrencyDollarIcon, requiresAuth: true }
@@ -177,11 +176,14 @@ export default function Navigation() {
             <div className="hidden md:flex items-center space-x-4">
               {isAuthenticated && user && (
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2 px-3 py-2 bg-theme-bg-secondary rounded-lg">
-                    <UserIcon className="w-4 h-4 text-theme-text-secondary" />
-                    <span className="text-sm text-theme-text-primary font-medium">
-                      {user.name || user.email || 'User'}
-                    </span>
+                  <div className="flex items-center justify-center w-10 h-10 bg-matisse text-white rounded-full font-semibold text-sm">
+                    {(() => {
+                      const firstName = user.firstName || user.first_name || user.name?.split(' ')[0] || '';
+                      const lastName = user.lastName || user.last_name || user.name?.split(' ')[1] || '';
+                      const firstInitial = firstName.charAt(0).toUpperCase();
+                      const lastInitial = lastName.charAt(0).toUpperCase();
+                      return `${firstInitial}${lastInitial}`;
+                    })()}
                   </div>
                   <button
                     onClick={logout}
