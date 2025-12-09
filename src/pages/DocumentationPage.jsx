@@ -100,7 +100,7 @@ const DocumentationPage = () => {
   const loadMarkdownContent = async (docId) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3003/api/docs/${docId}`);
+      const response = await fetch(`/api/docs/${docId}`);
       const data = await response.json();
       
       if (data.success) {
@@ -124,7 +124,7 @@ const DocumentationPage = () => {
 
   const handleDownload = async (doc) => {
     try {
-      const response = await fetch(`http://localhost:3003/api/docs/${doc.id}/raw`);
+      const response = await fetch(`/api/docs/${doc.id}/raw`);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
