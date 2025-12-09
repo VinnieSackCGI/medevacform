@@ -107,17 +107,17 @@ While AI accelerated development significantly, this project would not have been
 ### Cost Analysis
 
 **Traditional Development (8 weeks):**
-- Senior Full-Stack Developer: $120/hr × 320 hours = $38,400
-- DevOps Engineer: $100/hr × 40 hours = $4,000
-- Database Administrator: $110/hr × 40 hours = $4,400
-- **Total Labor Cost**: **$46,800**
+- Senior Full-Stack Developer: \$120/hr × 320 hours = \$38,400
+- DevOps Engineer: \$100/hr × 40 hours = \$4,000
+- Database Administrator: \$110/hr × 40 hours = \$4,400
+- **Total Labor Cost**: **\$46,800**
 
 **AI-Assisted Development (1 week):**
-- Developer + Claude Sonnet 4.5: $120/hr × 40 hours = $4,800
-- GitHub Copilot License: $39/month = $39
-- **Total Labor Cost**: **$4,839**
+- Developer + Claude Sonnet 4.5: \$120/hr × 40 hours = \$4,800
+- GitHub Copilot License: \$39/month = \$39
+- **Total Labor Cost**: **\$4,839**
 
-**Cost Savings**: **$41,961 (89.7% reduction)**
+**Cost Savings**: **\$41,961 (89.7% reduction)**
 
 ### Productivity Metrics
 
@@ -534,7 +534,7 @@ The MEDEVAC Application demonstrates the transformative potential of AI-assisted
 
 **Quantifiable Outcomes:**
 - **87.5% reduction in development time** (8 weeks → 1 week)
-- **89.7% cost savings** ($46,800 → $4,839)
+- **89.7% cost savings** (\$46,800 → \$4,839)
 - **Production-ready code** with comprehensive security, performance optimization, and architectural best practices
 - **Complete Azure cloud deployment** with automated CI/CD pipelines
 - **Comprehensive feature set** exceeding initial MVP requirements
