@@ -21,8 +21,8 @@ const PerDiemScraperForm = () => {
     setResult(null);
 
     try {
-      // Call the perdiem API that uses the same logic as perdiem.js
-      const response = await fetch(`http://localhost:3002/api/perdiem/${pCode}`, {
+      // Call the Azure Function scraper API
+      const response = await fetch(`/api/scraper/${pCode}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
