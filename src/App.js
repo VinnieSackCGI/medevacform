@@ -51,14 +51,14 @@ function AppContent() {
     );
   }
 
-  // If user is authenticated and tries to access login page, redirect to dashboard
+  // If user is authenticated and tries to access login page, redirect to management
   if (isAuthenticated && isLoginPage) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/management" />;
   }
 
-  // If user is authenticated and goes to root, redirect to dashboard
+  // If user is authenticated and goes to root, redirect to management
   if (isAuthenticated && location.pathname === '/') {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/management" />;
   }
 
   return (

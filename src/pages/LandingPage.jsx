@@ -131,10 +131,10 @@ const LandingPage = () => {
                     </Link>
                     
                     <Link
-                      to="/dashboard"
+                      to="/management"
                       className="group bg-transparent border-2 border-primary-foreground text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-foreground hover:text-primary transform hover:scale-105 transition-all duration-300 font-open-sans"
                     >
-                      View Dashboard
+                      Manage Submissions
                     </Link>
                     
                     <Link
