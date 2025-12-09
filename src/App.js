@@ -7,7 +7,6 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Navigation from './components/Navigation';
 import LoginPage from './pages/SimpleLoginPage';
 import RequestAccountPage from './pages/RequestAccountPage';
-import Dashboard from './pages/Dashboard';
 import EntryForm from './pages/EntryForm';
 import DatabaseView from './pages/DatabaseView';
 import PostData from './pages/PostData';
@@ -75,11 +74,6 @@ function AppContent() {
           {!isAuthenticated && <Route path="/" element={<LandingPage />} />}
           
           {/* Protected routes */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
           <Route path="/form" element={
             <ProtectedRoute>
               <EntryForm />
