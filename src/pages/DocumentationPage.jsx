@@ -29,6 +29,15 @@ const DocumentationPage = () => {
   // Documentation files available in the system
   const documentationFiles = [
     {
+      id: 'ai-development-summary',
+      title: '⭐ AI Development Summary',
+      type: 'markdown',
+      path: '/docs/documentation/AI_DEVELOPMENT_SUMMARY.md',
+      description: 'Complete summary of the MEDEVAC application development with Claude Sonnet 4.5 - metrics, architecture, and future roadmap',
+      category: 'Featured',
+      featured: true
+    },
+    {
       id: 'ai-use-case',
       title: 'AI Use Case One Pager',
       type: 'markdown',

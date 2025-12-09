@@ -3,6 +3,8 @@ const path = require('path');
 
 // Documentation files mapping
 const documentFiles = {
+  // Featured document - shown first
+  'ai-development-summary': { folder: 'documentation', file: 'AI_DEVELOPMENT_SUMMARY.md', featured: true },
   // Documentation files
   'ai-use-case': { folder: 'documentation', file: 'AI_Use_Case_One_Pager.md' },
   'azure-architecture': { folder: 'documentation', file: 'AZURE_ARCHITECTURE.md' },
