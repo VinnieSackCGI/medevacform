@@ -95,6 +95,11 @@ function AppContent() {
               <MedevacManagement />
             </ProtectedRoute>
           } />
+          <Route path="/analytics" element={
+            <ProtectedRoute>
+              <MedevacDashboard />
+            </ProtectedRoute>
+          } />
           <Route path="/database" element={
             <ProtectedRoute>
               <DatabaseView />
