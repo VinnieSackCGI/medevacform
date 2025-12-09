@@ -24,8 +24,8 @@ const CableTracking = ({ formData, setFormData }) => {
   // Calculate response time and cable status using useMemo
   const calculations = React.useMemo(() => {
     let responseTime = 0;
-    if (formData.fundingCableInDate && formData.fundingCableSentDate) {
-      // Use business days calculation
+    if (formData.fundingCableSentDate && formData.fundingCableInDate) {
+      // Use business days calculation - from IN date to SENT date
       responseTime = calculateBusinessDays(formData.fundingCableInDate, formData.fundingCableSentDate);
     }
 
@@ -42,12 +42,16 @@ const CableTracking = ({ formData, setFormData }) => {
   }, [formData.fundingCableInDate, formData.fundingCableSentDate]);
 
   React.useEffect(() => {
-    setFormData(prev => ({
-      ...prev,
-      employeeResponseTime: calculations.responseTime,
-      cableStatus: calculations.cableStatus
-    }));
-  }, [calculations, setFormData]);
+    // Only update if values have actually changed to avoid infinite loops
+    if (formData.employeeResponseTime !== calculations.responseTime || 
+        formData.cableStatus !== calculations.cableStatus) {
+      setFormData(prev => ({
+        ...prev,
+        employeeResponseTime: calculations.responseTime,
+        cableStatus: calculations.cableStatus
+      }));
+    }
+  }, [calculations.responseTime, calculations.cableStatus, formData.employeeResponseTime, formData.cableStatus, setFormData]);
 
   return (
     <Card className="bg-white shadow-lg border border-gray-200">
@@ -93,7 +97,7 @@ const CableTracking = ({ formData, setFormData }) => {
             <Label htmlFor="bdEmployee" className="text-black-pearl font-medium">
               BD Employee *
             </Label>
-            <Select onValueChange={(value) => handleSelectChange('bdEmployee', value)}>
+            <Select value={formData.bdEmployee} onValueChange={(value) => handleSelectChange('bdEmployee', value)}>
               <SelectTrigger className="border-gray-300 focus:border-matisse focus:ring-matisse">
                 <SelectValue placeholder="Select employee type" />
               </SelectTrigger>

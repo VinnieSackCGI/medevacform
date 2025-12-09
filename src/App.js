@@ -131,8 +131,8 @@ function AppContent() {
             </ProtectedRoute>
           } />
           
-          {/* Redirect authenticated users from root to dashboard */}
-          {isAuthenticated && <Route path="/" element={<Navigate to="/dashboard" />} />}
+          {/* Redirect authenticated users from root to management */}
+          {isAuthenticated && <Route path="/" element={<Navigate to="/management" />} />}
         </Routes>
       </main>
 
