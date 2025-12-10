@@ -19,6 +19,7 @@ import MedevacManagement from './pages/MedevacManagement';
 import AccessRequestForm from './components/AccessRequestForm';
 import AccessRequestAdmin from './components/AccessRequestAdmin';
 import AIShowcase from './pages/AIShowcase';
+import Presentation from './pages/Presentation';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -78,6 +79,11 @@ function AppContent() {
           <Route path="/showcase" element={
             <ProtectedRoute>
               <AIShowcase />
+            </ProtectedRoute>
+          } />
+          <Route path="/presentation" element={
+            <ProtectedRoute>
+              <Presentation />
             </ProtectedRoute>
           } />
           <Route path="/form" element={

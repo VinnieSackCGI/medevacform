@@ -94,13 +94,22 @@ export default function AIShowcase() {
               and enterprise-grade quality through intelligent human-AI collaboration
             </p>
 
-            <button
-              onClick={() => navigate('/form')}
-              className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-matisse hover:bg-matisse-dark rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-            >
-              <RocketLaunchIcon className="w-6 h-6 mr-2" />
-              Start Using the App
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigate('/presentation')}
+                className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gold-accent hover:bg-gold-accent/80 text-black-pearl rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              >
+                <DocumentTextIcon className="w-6 h-6 mr-2" />
+                View Presentation
+              </button>
+              <button
+                onClick={() => navigate('/form')}
+                className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-matisse hover:bg-matisse-dark rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              >
+                <RocketLaunchIcon className="w-6 h-6 mr-2" />
+                Start Using the App
+              </button>
+            </div>
           </div>
         </div>
       </div>
