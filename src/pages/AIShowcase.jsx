@@ -9,7 +9,8 @@ import {
   CodeBracketIcon,
   ShieldCheckIcon,
   LightBulbIcon,
-  BookOpenIcon
+  BookOpenIcon,
+  DocumentTextIcon
 } from '@heroicons/react/24/outline';
 
 export default function AIShowcase() {
