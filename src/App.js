@@ -18,6 +18,7 @@ import MedevacDashboard from './pages/MedevacDashboard';
 import MedevacManagement from './pages/MedevacManagement';
 import AccessRequestForm from './components/AccessRequestForm';
 import AccessRequestAdmin from './components/AccessRequestAdmin';
+import AIShowcase from './pages/AIShowcase';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -51,14 +52,14 @@ function AppContent() {
     );
   }
 
-  // If user is authenticated and tries to access login page, redirect to management
+  // If user is authenticated and tries to access login page, redirect to showcase
   if (isAuthenticated && isLoginPage) {
-    return <Navigate to="/management" />;
+    return <Navigate to="/showcase" />;
   }
 
-  // If user is authenticated and goes to root, redirect to management
+  // If user is authenticated and goes to root, redirect to showcase
   if (isAuthenticated && location.pathname === '/') {
-    return <Navigate to="/management" />;
+    return <Navigate to="/showcase" />;
   }
 
   return (
@@ -74,6 +75,11 @@ function AppContent() {
           {!isAuthenticated && <Route path="/" element={<LandingPage />} />}
           
           {/* Protected routes */}
+          <Route path="/showcase" element={
+            <ProtectedRoute>
+              <AIShowcase />
+            </ProtectedRoute>
+          } />
           <Route path="/form" element={
             <ProtectedRoute>
               <EntryForm />
