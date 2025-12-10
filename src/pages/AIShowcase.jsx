@@ -27,7 +27,7 @@ export default function AIShowcase() {
       icon: CurrencyDollarIcon,
       label: "Cost Reduction",
       value: "89.7%",
-      description: "$46,800 → $4,839",
+      description: "$46,800 → $4,839 (based on industry averages)",
       color: "from-green-500 to-green-600"
     },
     {
@@ -105,30 +105,8 @@ export default function AIShowcase() {
         </div>
       </div>
 
-      {/* Metrics Grid */}
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {metrics.map((metric, index) => (
-            <div
-              key={index}
-              className="bg-theme-bg-secondary rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-200 border border-theme-border-primary"
-            >
-              <div className="inline-flex p-3 rounded-lg bg-matisse mb-4">
-                <metric.icon className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-4xl font-bold text-theme-text-primary mb-2">
-                {metric.value}
-              </div>
-              <div className="text-sm font-semibold text-theme-text-primary mb-1">
-                {metric.label}
-              </div>
-              <div className="text-xs text-theme-text-secondary">
-                {metric.description}
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* Development Approach */}
         <div className="bg-theme-bg-secondary rounded-2xl shadow-xl p-8 md:p-12 mb-16 border border-theme-border-primary">
           <h2 className="text-3xl font-bold text-theme-text-primary mb-6 text-center font-garamond">
@@ -198,6 +176,29 @@ export default function AIShowcase() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {metrics.map((metric, index) => (
+            <div
+              key={index}
+              className="bg-theme-bg-secondary rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-200 border border-theme-border-primary"
+            >
+              <div className="inline-flex p-3 rounded-lg bg-matisse mb-4">
+                <metric.icon className="w-8 h-8 text-white" />
+              </div>
+              <div className="text-4xl font-bold text-theme-text-primary mb-2">
+                {metric.value}
+              </div>
+              <div className="text-sm font-semibold text-theme-text-primary mb-1">
+                {metric.label}
+              </div>
+              <div className="text-xs text-theme-text-secondary">
+                {metric.description}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Capabilities Grid */}
