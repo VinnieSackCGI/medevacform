@@ -15,7 +15,8 @@ import {
   ChartPieIcon,
   UserIcon,
   ArrowRightOnRectangleIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import MedFlagLogo from "../assets/images/logos/med-flag-logo-horizontal-white.svg";
 
@@ -27,6 +28,7 @@ export default function Navigation() {
 
   const allNavItems = [
     { path: '/', label: 'Home', icon: HomeIcon, requiresAuth: false },
+    { path: '/showcase', label: 'AI Showcase', icon: SparklesIcon, requiresAuth: true },
     { path: '/form', label: 'MEDEVAC Form', icon: DocumentTextIcon, requiresAuth: true },
     { path: '/management', label: 'Manage Submissions', icon: ChartPieIcon, requiresAuth: true },
     { path: '/analytics', label: 'Analytics', icon: ChartBarIcon, requiresAuth: true },
