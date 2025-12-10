@@ -12,8 +12,16 @@ import {
   CheckCircleIcon,
   ClockIcon,
   CurrencyDollarIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  ArrowRightIcon
 } from '@heroicons/react/24/outline';
+
+// Import images
+import ExcelExample1 from '../assets/images/presentation/Excel Example 1.png';
+import ExcelExample2 from '../assets/images/presentation/Excel Example pt 2.png';
+import FormPt1 from '../assets/images/presentation/Medevac Form Pt 1.png';
+import FormPt2 from '../assets/images/presentation/Medevac Form pt 2.png';
+import FormPt3 from '../assets/images/presentation/Medevac Form pt 3.png';
 
 export default function Presentation() {
   const navigate = useNavigate();
@@ -86,7 +94,23 @@ export default function Presentation() {
       ]
     },
 
-    // Slide 4: The AI Partnership
+    // Slide 4: Visual Transformation
+    {
+      type: 'transformation',
+      title: 'From Excel to Enterprise Web App',
+      before: {
+        title: 'Starting Point: Excel Template',
+        images: [ExcelExample1, ExcelExample2],
+        description: 'Manual Excel form with complex calculations and formatting'
+      },
+      after: {
+        title: 'Result: Modern Web Application',
+        images: [FormPt1, FormPt2, FormPt3],
+        description: 'Interactive React application with State Department branding, real-time validation, and cloud deployment'
+      }
+    },
+
+    // Slide 5: The AI Partnership
     {
       type: 'partnership',
       title: 'The 80/20 Partnership Model',
@@ -322,6 +346,66 @@ export default function Presentation() {
             <p className="text-xl text-gray-300 max-w-3xl">
               {slide.description}
             </p>
+          </div>
+        );
+
+      case 'transformation':
+        return (
+          <div className="flex flex-col h-full px-12 py-16">
+            <h2 className="text-5xl font-bold text-white font-garamond mb-8 text-center">
+              {slide.title}
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-8 flex-1">
+              {/* Before: Excel */}
+              <div className="flex flex-col">
+                <h3 className="text-2xl font-bold text-gold-accent mb-4 text-center">
+                  {slide.before.title}
+                </h3>
+                <div className="flex-1 space-y-4 overflow-auto">
+                  {slide.before.images.map((img, index) => (
+                    <div key={index} className="bg-theme-bg-secondary rounded-lg p-2 border border-theme-border-primary">
+                      <img 
+                        src={img} 
+                        alt={`Excel example ${index + 1}`}
+                        className="w-full h-auto rounded shadow-lg"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-gray-300 text-center mt-4 text-sm">
+                  {slide.before.description}
+                </p>
+              </div>
+
+              {/* Arrow */}
+              <div className="hidden md:flex items-center justify-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                <div className="bg-matisse rounded-full p-4 shadow-2xl">
+                  <ArrowRightIcon className="w-12 h-12 text-gold-accent" />
+                </div>
+              </div>
+
+              {/* After: Web App */}
+              <div className="flex flex-col">
+                <h3 className="text-2xl font-bold text-matisse mb-4 text-center">
+                  {slide.after.title}
+                </h3>
+                <div className="flex-1 space-y-4 overflow-auto">
+                  {slide.after.images.map((img, index) => (
+                    <div key={index} className="bg-theme-bg-secondary rounded-lg p-2 border-2 border-matisse">
+                      <img 
+                        src={img} 
+                        alt={`Form iteration ${index + 1}`}
+                        className="w-full h-auto rounded shadow-lg"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-gray-300 text-center mt-4 text-sm">
+                  {slide.after.description}
+                </p>
+              </div>
+            </div>
           </div>
         );
 
