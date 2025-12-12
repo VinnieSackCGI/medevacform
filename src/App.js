@@ -148,17 +148,16 @@ function AppContent() {
               <div>
                 <h3 className="font-semibold text-gold-accent mb-3">Emergency Contacts</h3>
                 <div className="space-y-2 text-sm">
-                  <p>Medical Unit: +1 (202) 647-3175</p>
-                  <p>After Hours: +1 (202) 647-4000</p>
-                  <p>Email: MedicalEmergencies@state.gov</p>
+                  <p>Medical Unit: 123-456-7890</p>
+                  <p>After Hours: 123-456-7891</p>
+                  <p>Email: example@email.gov</p>
                 </div>
               </div>
               
               <div>
                 <h3 className="font-semibold text-gold-accent mb-3">Important Notice</h3>
                 <p className="text-sm">
-                  This system is for official U.S. Department of State use only. 
-                  All medical information is classified and protected under HIPAA regulations.
+                  This is a prototype system for demonstration purposes only.
                 </p>
               </div>
               
@@ -166,15 +165,14 @@ function AppContent() {
                 <h3 className="font-semibold text-gold-accent mb-3">System Information</h3>
                 <div className="space-y-2 text-sm">
                   <p>Version: 2.1.0 (Prototype)</p>
-                  <p>Last Updated: January 2025</p>
-                  <p>Security Level: SENSITIVE</p>
+                  <p>Last Updated: December 2025</p>
                 </div>
               </div>
             </div>
             
             <div className="border-t border-gray-600 mt-8 pt-6">
               <div className="flex flex-col md:flex-row justify-between items-center text-xs opacity-75">
-                <p>© 2025 U.S. Department of State - Medical Evacuation Services</p>
+                <p>Medical Evacuation Services</p>
                 <p>Prototype Version - Not for Official Distribution</p>
               </div>
             </div>

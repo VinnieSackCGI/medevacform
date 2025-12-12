@@ -44,15 +44,11 @@ export default function Presentation() {
       content: [
         {
           heading: 'The Request',
-          text: 'Build a comprehensive medical evacuation tracking system for the U.S. Department of State'
+          text: 'Build a comprehensive medical evacuation tracking system that can replace a complex Excel form'
         },
         {
           heading: 'Traditional Timeline',
-          text: '8 weeks with a full development team (developer, DevOps, DBA)'
-        },
-        {
-          heading: 'Traditional Cost',
-          text: '$46,800 in labor costs'
+          text: '2/3 months with a full development team (lead, developer, DevOps, DBA)'
         },
         {
           heading: 'The Constraint',
@@ -70,12 +66,12 @@ export default function Presentation() {
         {
           icon: DocumentTextIcon,
           label: 'Business Rules',
-          description: 'MEDEVAC workflows, funding calculations, State Department requirements',
+          description: 'MEDEVAC workflows, funding calculations, user experience requirements',
           color: 'bg-blue-500'
         },
         {
           icon: SwatchIcon,
-          label: 'State Department Branding',
+          label: 'Branding',
           description: 'Official colors (Matisse Blue, Gold Accent), typography (Garamond, Open Sans), design standards',
           color: 'bg-gold-accent'
         },
@@ -99,7 +95,7 @@ export default function Presentation() {
       type: 'transformation',
       title: 'From Excel to Enterprise Web App',
       before: {
-        title: 'Starting Point: Excel Template',
+        title: 'Starting Point: Excel Template*',
         images: [ExcelExample1, ExcelExample2],
         description: 'Manual Excel form with complex calculations and formatting'
       },
